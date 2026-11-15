@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>竞品观测 · 月报</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%2315182e'/%3E%3Cpath d='M8 12.5V9a1 1 0 0 1 1-1h3.5M19.5 8H23a1 1 0 0 1 1 1v3.5M24 19.5V23a1 1 0 0 1-1 1h-3.5M12.5 24H9a1 1 0 0 1-1-1v-3.5' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='3.4' fill='%23ff5a2c'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="shared.css">
+<style>
+  .doc .table td:first-child, .doc .table th:first-child { padding-left: 0; }
+  .doc .table td:last-child, .doc .table th:last-child { padding-right: 0; }
+  .doc .table td { vertical-align: top; line-height: 1.7; }
+  .doc .table .who-cell { display: flex; align-items: center; gap: 8px; white-space: nowrap; color: var(--ink); font-weight: 500; }
+  .doc .table .titles { display: flex; flex-direction: column; gap: 2px; }
+  .doc .table .titles a:hover { color: var(--accent-ink); }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side"></aside>
+
+  <main class="main">
+    <header class="top">
+      <div class="crumb">观测空间 <svg class="i" style="width:12px;height:12px"><use href="#i-right"/></svg> <a href="index.html">CCM 云文档</a> <svg class="i" style="width:12px;height:12px"><use href="#i-right"/></svg> <b>月报</b><span>· 每月最后一天 18:00 生成并推送</span></div>
+      <div class="actions">
+        <button class="btn" id="btn-push"><svg class="i"><use href="#i-send"/></svg>推送到飞书</button>
+        <button class="btn primary" id="btn-regen"><svg class="i"><use href="#i-refresh"/></svg>重新生成</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="cols" style="margin-top:14px">
+        <section class="panel" aria-label="月报">
+          <div class="tabs" role="tablist" aria-label="选择月份" id="months"></div>
+          <div class="doc" id="doc"></div>
+        </section>
+
+        <div class="aside sticky">
+          <section class="panel" aria-label="目录">
+            <div class="block">
+              <div class="block-title"><h2>目录</h2></div>
+              <nav class="toc" id="toc"></nav>
+            </div>
+          </section>
+
+          <section class="panel" aria-label="飞书推送">
+            <div class="block">
+              <div class="block-title"><h2>飞书消息预览</h2><a class="link" href="subscribe.html">管理订阅</a></div>
+              <div class="chat" id="chat"></div>
+            </div>
+            <div class="block">
+              <div class="block-title"><h2>推送记录<span class="demo">示意</span></h2></div>
+              <div class="list-plain" id="pushlog"></div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="data.js"></script>
+<script src="shell.js"></script>
+<script>
+const { D, P, ORDER, T, U, esc, md, inMonth, kindHTML, logoHTML, toast, busy, pushDialog } = CW;
+CW.side('monthly');
+
+const strip = h => h.replace(/<[^>]+>/g, '');
+const last = m => new Date(2026, m, 0).getDate();
+let M = D.LATEST_FULL;
+
+document.getElementById('months').innerHTML = D.MONTHS.map(m =>
+  `<span class="tab" role="tab" tabindex="0" data-m="${m}">${m} 月<span class="num">${inMonth(m).length}</span>${D.REPORT[m].partial ? '<span style="opacity:.7">· 进行中</span>' : ''}</span>`).join('') +
+  `<span class="demo" style="align-self:center">2026-07-01 起收录</span>`;
+
+function render() {
+  const R = D.REPORT[M], idx = inMonth(M), prevIdx = D.MONTHS.includes(M - 1) ? inMonth(M - 1) : null;
+  const off = idx.filter(i => U[i][3] === 'off').length;
+  const comps = new Set(idx.map(i => U[i][1])).size;
+  const themes = Object.keys(T).map(t => [t, idx.filter(i => U[i][2] === t)]).filter(x => x[1].length).sort((a, b) => b[1].length - a[1].length);
+  const delta = prevIdx ? idx.length - prevIdx.length : null;
+
+  document.querySelectorAll('#months .tab').forEach(t => { const on = +t.dataset.m === M; t.classList.toggle('on', on); t.setAttribute('aria-selected', on); });
+
+  document.getElementById('doc').innerHTML = `
+    <div class="doc-eyebrow"><span class="chip">2026 年 ${M} 月月报</span>${R.partial ? `进行中 · 截至 ${D.NOW} · 已收录 ${idx.length} 条` : `依据 ${idx.length} 条动态 · 2026-${M}-${last(M)} 生成`}</div>
+    <h1 id="s-sum">${R.h1}</h1>
+    <p class="lead">${esc(R.lead)}</p>
+    <div class="kpis">
+      <div class="kpi"><div class="kpi-value num">${idx.length}${delta == null || R.partial ? '' : `<sup${delta < 0 ? ' class="down"' : ''}>${delta > 0 ? '+' : delta < 0 ? '−' : '±'}${Math.abs(delta)}</sup>`}</div><div class="kpi-label">${R.partial ? '已收录 · 截至 15 日' : prevIdx ? `新动态 · 较 ${M - 1} 月 ${prevIdx.length} 条` : '新动态 · 收录首月'}</div></div>
+      <div class="kpi"><div class="kpi-value num">${comps}<sup class="down">/${ORDER.length}</sup></div><div class="kpi-label">有更新的竞品</div></div>
+      <div class="kpi"><div class="kpi-value num">${off}</div><div class="kpi-label">来自官方日志</div></div>
+      <div class="kpi"><div class="kpi-value num">${themes[0][1].length}</div><div class="kpi-label">最多的主题 · ${T[themes[0][0]][0]}</div></div>
+    </div>
+    ${themes.map(([t, ids]) => `
+      <h2 class="sec" id="s-${t}">${T[t][0]}<small>${ids.length} 条</small></h2>
+      <p>${esc(R.sum[t] || '')}</p>
+      <div class="mini">${ids.map(i => { const [d, p, , k, title] = U[i]; const x = md(d);
+        return `<a href="detail.html#u${i}"><span class="d num">${x.m}/${x.day}</span>${logoHTML(p, true)}<span class="t">${esc(title)}</span>${kindHTML(k)}</a>`; }).join('')}</div>`).join('')}
+    <h2 class="sec" id="s-who">各竞品本月动态</h2>
+    <div class="table-wrap" style="margin-top:8px">
+      <table class="table">
+        <thead><tr><th style="width:150px">竞品</th><th>${M} 月做了什么</th><th class="r" style="width:44px">条数</th></tr></thead>
+        <tbody>${ORDER.map(p => { const ids = idx.filter(i => U[i][1] === p);
+          return `<tr><td><span class="who-cell">${logoHTML(p, true)}${P[p].name}</span></td><td${ids.length ? '' : ' class="muted"'}>${ids.length ? `<div class="titles">${ids.map(i => `<a href="detail.html#u${i}">${esc(U[i][4])}</a>`).join('')}</div>` : `${M} 月无收录`}</td><td class="r num" style="color:var(--ink);font-weight:600">${ids.length}</td></tr>`; }).join('')}</tbody>
+      </table>
+    </div>
+    <div class="doc-foot">数据说明：${idx.length} 条动态均为公开信息，每条附来源链接。「官方」指厂商自己的更新日志或博客，「媒体」指新闻报道或转载。平台从 2026 年 7 月开始收录。各主题小结由 AI 根据当月动态写成，只使用上面列出的事实。${R.partial ? `本月还没结束，完整月报在 11 月 30 日 18:00 生成。` : ''}</div>`;
+
+  document.getElementById('toc').innerHTML =
+    `<a href="#s-sum" class="on">本月结论</a>` +
+    themes.map(([t, ids]) => `<a href="#s-${t}"><span style="display:inline-flex;align-items:center;gap:7px"><i style="width:7px;height:7px;border-radius:50%;background:${T[t][1]}"></i>${T[t][0]}</span><span class="num">${ids.length}</span></a>`).join('') +
+    `<a href="#s-who">各竞品本月动态</a>`;
+
+  const top2 = themes.slice(0, 2);
+  document.getElementById('chat').innerHTML = `
+    <div class="chat-head"><svg viewBox="0 0 32 32"><use href="#mark"/></svg><b>竞品观测</b>机器人 · ${R.partial ? '11-30 18:00 发送' : `${M}-${last(M)} 18:00`}</div>
+    <div class="msg">
+      <div class="msg-head">${M} 月竞品月报${R.partial ? '（预览）' : ''}<span>CCM 云文档</span></div>
+      <div class="msg-body">
+        <h4>${strip(R.h1)}</h4>
+        ${idx.length} 条新动态${delta != null && !R.partial ? `，比 ${M - 1} 月${delta >= 0 ? '多' : '少'} ${Math.abs(delta)} 条` : ''}。主要集中在：
+        <ol>${top2.map(([t, ids]) => `<li>${T[t][0]} ${ids.length} 条：${[...new Set(ids.map(i => P[U[i][1]].name))].join('、')}</li>`).join('')}</ol>
+      </div>
+      <div class="msg-foot"><span class="pri">阅读月报</span><span>全部动态</span></div>
+    </div>`;
+  document.getElementById('pushlog').innerHTML = R.partial
+    ? `<div><span>11 月月报</span><span class="st idle">11-30 18:00 发送</span></div>`
+    : [['CCM 产品组', 42], ['文档 AI 设计周会', 18], ['国内竞品观察', 26]].map(([g, n]) => `<div><span><b>${g}</b> · ${n} 人</span><span class="st ok">已送达</span></div>`).join('');
+
+  document.getElementById('btn-push').disabled = !!R.partial;
+  document.getElementById('btn-push').title = R.partial ? '本月还没结束，月末自动推送' : '';
+  bindToc();
+}
+
+/* 目录高亮跟随滚动 */
+let links = [], secs = [];
+function bindToc() { links = [...document.querySelectorAll('#toc a')]; secs = links.map(a => document.querySelector(a.getAttribute('href'))); }
+addEventListener('scroll', () => {
+  let k = 0; secs.forEach((s, i) => { if (s && s.getBoundingClientRect().top < 120) k = i; });
+  links.forEach((a, i) => a.classList.toggle('on', i === k));
+}, { passive: true });
+
+/* 月份切换：monthly.html#m9 */
+function fromHash() { const m = +(/^#m(\d+)$/.exec(location.hash) || [])[1]; M = D.MONTHS.includes(m) ? m : D.LATEST_FULL; render(); }
+const months = document.getElementById('months');
+const go = el => { if (el) { try { history.replaceState(null, '', '#m' + el.dataset.m); } catch (err) {} M = +el.dataset.m; render(); scrollTo(0, 0); } };
+months.addEventListener('click', e => go(e.target.closest('.tab')));
+months.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(e.target.closest('.tab')); } });
+addEventListener('hashchange', fromHash);
+fromHash();
+
+document.getElementById('btn-push').onclick = () => pushDialog(`${M} 月月报 · ${strip(D.REPORT[M].h1)}`);
+document.getElementById('btn-regen').onclick = e => busy(e.currentTarget, '生成中…', 1800, () => toast(`${M} 月月报已重新生成，依据 ${inMonth(M).length} 条动态`));
+</script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>竞品观测 · 年报</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%2315182e'/%3E%3Cpath d='M8 12.5V9a1 1 0 0 1 1-1h3.5M19.5 8H23a1 1 0 0 1 1 1v3.5M24 19.5V23a1 1 0 0 1-1 1h-3.5M12.5 24H9a1 1 0 0 1-1-1v-3.5' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='3.4' fill='%23ff5a2c'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="shared.css">
+<style>
+  .cc-bar.partial { background: repeating-linear-gradient(135deg, var(--brand) 0 4px, #3a3e5c 4px 8px); }
+  .cc-empty { position: absolute; left: 8px; bottom: 10px; font-size: 12px; color: var(--ink-3); }
+  .heat td.c { cursor: pointer; }
+  .heat td.c:hover { box-shadow: inset 0 0 0 2px var(--accent); }
+</style>
+</head>
+<!-- 数据全部来自 data.js：2026-07-01 起真实收录，截至 2026-11-15。1–6 月平台尚未开始收录，不放任何数字。 -->
+<body>
+<div class="app">
+  <aside class="side"></aside>
+
+  <main class="main">
+    <header class="top">
+      <div class="crumb">观测空间 <svg class="i" style="width:12px;height:12px"><use href="#i-right"/></svg> <a href="index.html">CCM 云文档</a> <svg class="i" style="width:12px;height:12px"><use href="#i-right"/></svg> <b>年报</b><span>· 12 月 31 日生成并推送</span></div>
+      <div class="actions">
+        <button class="btn" id="btn-export"><svg class="i"><use href="#i-download"/></svg>导出</button>
+        <button class="btn primary" id="btn-draft"><svg class="i"><use href="#i-spark"/></svg>预览年报草稿</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <section class="hero" aria-label="年度概况">
+        <div>
+          <h1>2026 年度报告，<mark>写到 11 月</mark></h1>
+          <p id="lead"></p>
+          <div class="hero-meta"><span class="chip">进行中</span>12 月 31 日 18:00 生成 · 数据截至 2026-11-15</div>
+        </div>
+        <div class="kpis" id="kpis"></div>
+      </section>
+
+      <section class="panel" aria-label="每月动态数">
+        <div class="panel-head">
+          <h2>每月动态数<small>2026 年</small></h2>
+          <div class="cc-key">
+            <span><i style="background:var(--brand)"></i>已收录</span>
+            <span><i style="background:repeating-linear-gradient(135deg,var(--brand) 0 3px,#3a3e5c 3px 6px)"></i>本月进行中</span>
+            <span><i style="border:1px dashed var(--line)"></i>未到</span>
+          </div>
+        </div>
+        <div class="cc">
+          <div class="cc-y" id="cc-y"></div>
+          <div class="cc-plot" id="cc-plot"></div>
+        </div>
+        <div class="cc-xwrap"><div></div><div class="cc-x" id="cc-x"></div></div>
+      </section>
+
+      <div class="cols">
+        <section class="panel" aria-label="竞品 × 月份">
+          <div class="panel-head">
+            <h2>竞品 × 月份<small>点格子查看当月动态</small></h2>
+          </div>
+          <div class="heat"><table id="heat"></table></div>
+        </section>
+
+        <div class="aside">
+          <section class="panel" aria-label="年度主题与结论">
+            <div class="block">
+              <div class="block-title"><h2 id="topics-title"></h2></div>
+              <div class="bars" id="topics"></div>
+            </div>
+            <div class="pending" style="border-top:1px solid var(--line-soft)">
+              <div class="pending-ico"><svg class="i" style="width:20px;height:20px"><use href="#i-book"/></svg></div>
+              <div>
+                <h3>年度结论 12 月 31 日生成</h3>
+                <p>AI 会读完 7–12 月的 6 份月报，写出一句年度判断和三条主线，和月报一样附每条依据。</p>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <section class="panel" aria-label="月报一览">
+        <div class="panel-head" style="padding-bottom:12px">
+          <h2>月报一览<small>年报会从这些月报里提炼</small></h2>
+          <a class="link" href="monthly.html">全部月报<svg class="i" style="width:14px;height:14px"><use href="#i-right"/></svg></a>
+        </div>
+        <div class="miles" id="miles"></div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<script src="data.js"></script>
+<script src="shell.js"></script>
+<script>
+const { D, P, ORDER, T, U, esc, inMonth, logoHTML, modal, toast, busy } = CW;
+CW.side('annual');
+
+const NOWM = 11, COLLECTED = [7, 8, 9, 10, 11];
+const cnt = m => inMonth(m).length;
+const total = U.length, full = [7, 8, 9, 10];
+const peak = full.reduce((a, m) => cnt(m) > cnt(a) ? m : a, 7);
+
+document.getElementById('lead').textContent = `年报在 12 月 31 日自动生成并推送。平台从 7 月开始收录，到 11 月 15 日共 ${total} 条动态，全部附原文链接。1–6 月平台还没上线，图上留空。`;
+document.getElementById('kpis').innerHTML = `
+  <div class="kpi"><div class="kpi-value num">${total}</div><div class="kpi-label">2026 已收录</div></div>
+  <div class="kpi"><div class="kpi-value num">${COLLECTED.length}<sup class="down">/6</sup></div><div class="kpi-label">收录月份 · 7–12 月</div></div>
+  <div class="kpi"><div class="kpi-value num">${cnt(peak)}</div><div class="kpi-label">单月最多 · ${peak} 月</div></div>
+  <div class="kpi"><div class="kpi-value num">${new Set(U.map(u => u[1])).size}<sup class="down">/${ORDER.length}</sup></div><div class="kpi-label">有过更新的竞品</div></div>`;
+
+/* ---------- 柱状图 ---------- */
+const YMAX = 20, TICKS = [0, 5, 10, 15, 20];
+document.getElementById('cc-y').innerHTML = TICKS.map(v => `<span class="num" style="bottom:${v / YMAX * 100}%">${v}</span>`).join('');
+document.getElementById('cc-plot').innerHTML =
+  TICKS.slice(1).map(v => `<div class="cc-line" style="bottom:${v / YMAX * 100}%"></div>`).join('') +
+  `<div class="cc-bars">${Array.from({ length: 12 }, (_, k) => { const m = k + 1;
+    if (m < 7) return '<div></div>';
+    if (m > NOWM) return `<div class="cc-bar future" style="height:12%" title="${m} 月未到"></div>`;
+    const v = cnt(m);
+    return `<a class="cc-bar${m === NOWM ? ' partial' : ''}" href="monthly.html#m${m}" style="height:${v / YMAX * 100}%" title="${m} 月 ${v} 条${m === NOWM ? '（截至 15 日）' : ''}" aria-label="${m} 月 ${v} 条"><span class="cc-val num">${v}</span></a>`; }).join('')}</div>` +
+  `<span class="cc-empty">1–6 月平台未上线</span>`;
+document.getElementById('cc-x').innerHTML = Array.from({ length: 12 }, (_, k) => `<span class="num${k + 1 === NOWM ? ' now' : ''}"${k < 6 ? ' style="opacity:.5"' : ''}>${k + 1}月</span>`).join('');
+
+/* ---------- 热力表 ---------- */
+const shade = v => {
+  if (!v) return 'class="c zero"';
+  const a = Math.min(.1 + v / 5 * .6, .72);
+  return `class="c num" style="background:rgba(21,24,46,${a.toFixed(2)});color:${a > .42 ? '#fff' : 'var(--ink)'}"`;
+};
+const order = [...ORDER].sort((a, b) => U.filter(u => u[1] === b).length - U.filter(u => u[1] === a).length);
+document.getElementById('heat').innerHTML = `
+  <thead><tr><th></th>${COLLECTED.map(m => `<th class="num${m === NOWM ? ' now' : ''}">${m} 月${m === NOWM ? '*' : ''}</th>`).join('')}<th class="num" style="text-align:right">合计</th></tr></thead>
+  <tbody>${order.map(p => { const r = COLLECTED.map(m => inMonth(m).filter(i => U[i][1] === p).length);
+    return `<tr><td class="name"><div class="tl-name">${logoHTML(p, true)}<span>${P[p].name}</span></div></td>${r.map((v, k) => `<td ${shade(v)} data-p="${p}" data-m="${COLLECTED[k]}" tabindex="0" title="${P[p].name} · ${COLLECTED[k]} 月 ${v} 条">${v}</td>`).join('')}<td class="sum num">${r.reduce((a, b) => a + b, 0)}</td></tr>`; }).join('')}</tbody>
+  <tfoot><tr><td class="name" style="font-size:12px;color:var(--ink-3)">合计</td>${COLLECTED.map(m => `<td class="sum num" style="text-align:center">${cnt(m)}</td>`).join('')}<td class="sum num">${total}</td></tr></tfoot>`;
+const openCell = td => {
+  const p = td.dataset.p, m = +td.dataset.m, ids = inMonth(m).filter(i => U[i][1] === p);
+  modal({ title: `${P[p].name} · ${m} 月`, sub: ids.length ? `${ids.length} 条动态` : '这个月没有可核实的公开更新', ok: ids.length ? '在动态页查看' : '知道了', wide: true,
+    body: ids.length ? `<div class="rel">${ids.map(i => `<a href="detail.html#u${i}">${logoHTML(p, true)}<span><span class="t">${esc(U[i][4])}</span><small>${+U[i][0].slice(0, 2)} 月 ${+U[i][0].slice(3)} 日 · ${T[U[i][2]][0]}</small></span></a>`).join('')}</div>` : `<p class="note" style="margin:0">平台检索了 ${P[p].name} 的官方日志和媒体报道，这个月没有找到可核实的发布。</p>`,
+    onOk() { if (ids.length) location.href = `feed.html#p-${p}`; } });
+};
+const heat = document.getElementById('heat');
+heat.addEventListener('click', e => { const td = e.target.closest('td.c'); if (td) openCell(td); });
+heat.addEventListener('keydown', e => { const td = e.target.closest('td.c'); if (td && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openCell(td); } });
+
+/* ---------- 年度主题分布 ---------- */
+const tc = t => U.filter(u => u[2] === t).length;
+const themes = Object.keys(T).sort((a, b) => tc(b) - tc(a)), tmax = tc(themes[0]);
+document.getElementById('topics-title').innerHTML = `年度主题分布<small>${total} 条</small>`;
+document.getElementById('topics').innerHTML = themes.map(t => `
+  <a class="bar" href="feed.html#t-${t}" style="grid-template-columns:66px 1fr 22px"><span>${T[t][0]}</span><div class="bar-track"><div class="bar-fill" style="width:${tc(t) / tmax * 100}%;background:${T[t][1]}"></div></div><span class="num">${tc(t)}</span></a>`).join('');
+
+/* ---------- 月报一览 ---------- */
+const strip = h => h.replace(/<[^>]+>/g, '').replace(/^\d+ 月[，]?/, '');
+document.getElementById('miles').innerHTML =
+  `<div class="mile"><span class="m" style="color:var(--ink-3)">12 月</span><span class="t ph">未到，12 月 31 日 18:00 与年报一起生成</span><span class="n">—</span></div>` +
+  D.MONTHS.map(m => `<a class="mile" href="monthly.html#m${m}"><span class="m">${m} 月</span><span class="t${D.REPORT[m].partial ? ' ph' : ''}">${D.REPORT[m].partial ? '进行中，11 月 30 日生成' : strip(D.REPORT[m].h1)}</span><span class="n num">${cnt(m)} 条</span></a>`).join('') +
+  `<div class="mile"><span class="m" style="color:var(--ink-3)">1–6</span><span class="t ph">平台 7 月开始收录，之前没有数据</span><span class="n">—</span></div>`;
+
+document.getElementById('btn-draft').onclick = e => busy(e.currentTarget, '起草中…', 1600, () => modal({
+  title: '年报草稿预览', sub: '依据 7–10 月 4 份月报和 11 月已收录动态，正式版 12 月 31 日生成', ok: '知道了', wide: true,
+  body: `<p class="note" style="margin:0 0 4px">下面是按已有月报拼出的骨架，年度判断要等 12 月数据齐了再写。</p>
+    <div class="list-plain">${D.MONTHS.slice().reverse().map(m => `<div><span><b>${m} 月</b> · ${D.REPORT[m].partial ? '进行中' : strip(D.REPORT[m].h1)}</span><span class="num">${cnt(m)} 条</span></div>`).join('')}</div>
+    <div class="list-plain" style="margin-top:6px">${themes.slice(0, 3).map(t => `<div><span>主线候选 · <b>${T[t][0]}</b></span><span class="num">${tc(t)} 条</span></div>`).join('')}</div>`,
+}));
+document.getElementById('btn-export').onclick = () => toast(`已导出年报数据：${total} 条动态，5 个月`);
+</script>
+</body>
+</html>

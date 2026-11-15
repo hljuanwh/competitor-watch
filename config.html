@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>竞品观测 · 配置</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%2315182e'/%3E%3Cpath d='M8 12.5V9a1 1 0 0 1 1-1h3.5M19.5 8H23a1 1 0 0 1 1 1v3.5M24 19.5V23a1 1 0 0 1-1 1h-3.5M12.5 24H9a1 1 0 0 1-1-1v-3.5' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='3.4' fill='%23ff5a2c'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="shared.css">
+</head>
+<!-- 竞品、主题与累计条数来自 data.js 的真实收录；其他空间名称、来源清单、机器人地址为示意 -->
+<body>
+<div class="app">
+  <aside class="side"></aside>
+
+  <main class="main">
+    <header class="top">
+      <div class="crumb">观测空间 <svg class="i" style="width:12px;height:12px"><use href="#i-right"/></svg> <a href="index.html" id="crumb-name">CCM 云文档</a> <svg class="i" style="width:12px;height:12px"><use href="#i-right"/></svg> <b>配置</b><span>· 竞品、主题、来源和推送</span></div>
+      <div class="actions">
+        <button class="btn" id="btn-copy"><svg class="i"><use href="#i-copy"/></svg>复制为新空间</button>
+        <button class="btn primary" id="btn-save"><svg class="i"><use href="#i-check"/></svg>保存修改</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <section class="hero" aria-label="配置概况">
+        <div>
+          <h1>换一套竞品，就是另一个团队的平台</h1>
+          <p>平台的竞品、主题分类、来源、推送渠道和 AI 写作规则都在这里改。复制一份空间，换成自己的竞品和订阅人，就能给别的团队用。</p>
+          <div class="hero-meta"><span class="chip">5 个团队在用</span>每个团队一个观测空间，互不影响</div>
+        </div>
+        <div class="kpis">
+          <div class="kpi"><div class="kpi-value num">5</div><div class="kpi-label">观测空间</div></div>
+          <div class="kpi"><div class="kpi-value num" id="k-comp">8</div><div class="kpi-label">本空间竞品</div></div>
+          <div class="kpi"><div class="kpi-value num" id="k-topic">6</div><div class="kpi-label">主题分类</div></div>
+          <div class="kpi"><div class="kpi-value num">12</div><div class="kpi-label">数据源<span class="demo">示意</span></div></div>
+        </div>
+      </section>
+
+      <div class="split">
+        <nav class="panel subnav" aria-label="配置分区">
+          <a href="#space" class="on">空间信息</a>
+          <a href="#sources">竞品与来源<span class="num" id="n-comp">8</span></a>
+          <a href="#topics">主题分类<span class="num" id="n-topic">6</span></a>
+          <a href="#push">推送渠道</a>
+          <a href="#ai">AI 写作规则</a>
+        </nav>
+
+        <div class="stack-col">
+          <section class="panel anchor" id="space" aria-label="空间信息">
+            <div class="panel-head"><h2>空间信息</h2></div>
+            <div class="form">
+              <div class="form-row"><label class="lbl" for="f-name">空间名称</label><input class="input" id="f-name" value="CCM 云文档"></div>
+              <div class="form-row"><label class="lbl" for="f-desc">一句话说明<small>显示在顶栏面包屑后</small></label><input class="input" id="f-desc" value="在线文档、表格、幻灯片与文档内 AI"></div>
+              <div class="form-row top"><span class="lbl">全部空间<small>5 个团队各用一个</small></span>
+                <div id="spaces"></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel anchor" id="sources" aria-label="竞品与来源">
+            <div class="panel-head">
+              <h2 id="comp-title">竞品与来源<small>8 个竞品 · 12 个来源</small></h2>
+              <p class="panel-sub">优先填厂商官方的更新日志或博客；没有官方日志的竞品，用新闻检索补充，这类动态会标「媒体」。</p>
+            </div>
+            <div class="table-wrap">
+              <table class="table">
+                <thead><tr><th>竞品</th><th>来源<span class="demo" style="margin-left:6px">示意</span></th><th class="r">累计</th><th>最近一条</th><th>状态</th><th class="r"></th></tr></thead>
+                <tbody id="comp"></tbody>
+              </table>
+            </div>
+            <button class="add-row" id="add-comp"><svg class="i"><use href="#i-plus"/></svg>添加竞品</button>
+          </section>
+
+          <section class="panel anchor" id="topics" aria-label="主题分类">
+            <div class="panel-head">
+              <h2 id="topic-title">主题分类<small>6 个</small></h2>
+              <p class="panel-sub">AI 按这里的说明给每条动态归类。说明写得越具体，归类越稳定。颜色会用在时间轴、标签和分布图上。</p>
+            </div>
+            <div class="table-wrap">
+              <table class="table">
+                <thead><tr><th>主题</th><th>怎么判定（写给 AI 的说明）</th><th class="r">累计</th><th class="r"></th></tr></thead>
+                <tbody id="tps"></tbody>
+              </table>
+            </div>
+            <button class="add-row" id="add-topic"><svg class="i"><use href="#i-plus"/></svg>添加主题</button>
+          </section>
+
+          <section class="panel anchor" id="push" aria-label="推送渠道">
+            <div class="panel-head"><h2>推送渠道</h2><a class="link" href="subscribe.html">管理订阅<svg class="i" style="width:14px;height:14px"><use href="#i-right"/></svg></a></div>
+            <div class="form">
+              <div class="form-row"><label class="lbl" for="f-hook">飞书机器人<small>群设置里添加自定义机器人后复制</small></label>
+                <div class="input-row"><input class="input mono" id="f-hook" value="https://open.feishu.cn/open-apis/bot/v2/hook/••••••••••••3f2a" readonly><button class="btn sm" type="button" id="btn-hook"><svg class="i"><use href="#i-send"/></svg>测试发送</button></div>
+              </div>
+              <div class="form-row"><label class="lbl" for="f-title">卡片标题</label><input class="input" id="f-title" value="竞品新动态 · CCM 云文档"></div>
+              <div class="form-row"><span class="lbl">夜间免打扰</span>
+                <div class="input-row"><button class="switch" role="switch" aria-checked="true" aria-label="夜间免打扰"></button><span style="font-size:13px;color:var(--ink-2)">22:00–08:00 的新动态顺延到 08:00 发送</span></div>
+              </div>
+              <div class="form-row"><span class="lbl">月报时间</span>
+                <div class="input-row"><div class="seg" role="group" aria-label="月报时间"><button class="on">每月最后一天</button><button>次月 1 日</button></div><input class="input num" id="f-time" value="18:00" style="width:80px"></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel anchor" id="ai" aria-label="AI 写作规则">
+            <div class="panel-head">
+              <h2>AI 写作规则</h2>
+              <p class="panel-sub">AI 写每条动态的摘要和解读时都会先读这段规则。</p>
+            </div>
+            <div class="form">
+              <div class="form-row top"><label class="lbl" for="f-rule">写作规则</label>
+                <textarea class="input" id="f-rule" rows="6">1. 摘要不超过两句：先写做了什么，再写谁能用、什么时候能用。
+2. 只写原文里有的事实；观点和推测放进「AI 解读」，不进摘要。
+3. 每条必须附原文链接；不是厂商自己发布的，标「媒体」。
+4. 按「主题分类」的说明归类；拿不准时归到最接近的一类，并标记待复核。</textarea>
+              </div>
+              <div class="form-row"><span class="lbl">发布前人工复核</span>
+                <div class="input-row"><button class="switch" role="switch" aria-checked="false" aria-label="发布前人工复核"></button><span style="font-size:13px;color:var(--ink-2)">关闭时，AI 写完直接推送</span></div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="data.js"></script>
+<script src="shell.js"></script>
+<script>
+const { P, ORDER, T, U, esc, logoHTML, modal, val, toast, busy } = CW;
+CW.side('config');
+
+const SPACES = [['C', 'CCM 云文档', '当前空间 · 8 个竞品'], ['幻', '幻灯片', '6 个竞品'], ['表', '多维表格', '7 个竞品'], ['知', '知识库', '5 个竞品'], ['会', '会议纪要', '6 个竞品']];
+const renderSpaces = () => document.getElementById('spaces').innerHTML = SPACES.map(([a, n, s], i) => `
+  <div class="space-card"><span class="av">${esc(a)}</span><span><b style="font-weight:500;color:var(--ink)">${esc(n)}</b>${i ? '' : ' <span class="kind off" style="margin-left:4px">当前</span>'}<small style="display:block;font-size:12px;color:var(--ink-3)">${esc(s)}</small></span>${i ? '<span class="demo">示意</span>' : ''}</div>`).join('');
+renderSpaces();
+
+const SRCS = { google: 'Google Workspace Updates · Gemini for Workspace 博客', ms: 'Microsoft 365 Copilot 发布说明 · Microsoft Copilot 博客', notion: 'Notion 发布说明',
+  gpt: 'OpenAI 发布说明 · 新闻检索', claude: 'Claude 更新日志', tx: '腾讯文档更新日志 · 新闻检索', wps: 'WPS 更新日志 · 新闻检索', dd: '钉钉文档更新日志' };
+const COMP = ORDER.map(p => ({ id: p, name: P[p].name, mark: P[p].mark, cls: P[p].cls, src: SRCS[p] }));
+function renderComp() {
+  document.getElementById('comp').innerHTML = COMP.map((c, k) => { const n = U.filter(u => u[1] === c.id), last = n[0];
+    return `<tr class="${c.fresh ? 'row-new' : ''}">
+      <td><div class="cell"><div class="logo sm ${c.cls}">${esc(c.mark)}</div><b>${esc(c.name)}</b></div></td>
+      <td class="muted">${esc(c.src)}</td>
+      <td class="r num" style="color:var(--ink);font-weight:600">${n.length}</td>
+      <td class="muted num" style="white-space:nowrap">${last ? `<a href="detail.html#u${U.indexOf(last)}">${last[0]}</a>` : c.fresh ? '等待首次抓取' : '—'}</td>
+      <td>${c.id === 'dd' ? '<a class="st warn" href="tasks.html">需处理</a>' : c.fresh ? '<span class="st run">待抓取</span>' : '<span class="st ok">正常</span>'}</td>
+      <td class="r"><button class="icon-btn" data-ec="${k}" aria-label="编辑 ${esc(c.name)}"><svg class="i"><use href="#i-edit"/></svg></button></td>
+    </tr>`; }).join('');
+  const nsrc = COMP.reduce((a, c) => a + c.src.split('·').filter(x => !x.includes('新闻检索')).length, 0) + 2;
+  document.getElementById('comp-title').innerHTML = `竞品与来源<small>${COMP.length} 个竞品 · ${nsrc} 个来源</small>`;
+  document.getElementById('k-comp').textContent = document.getElementById('n-comp').textContent = COMP.length;
+}
+function editComp(c) {
+  const isNew = !c; c = c || { id: 'new' + Date.now(), name: '', mark: '', cls: 'l-notion', src: '', fresh: true };
+  modal({ title: isNew ? '添加竞品' : `编辑 ${c.name}`, sub: '来源越接近厂商官方，收录越准确', ok: isNew ? '添加' : '保存',
+    body: `<div style="display:grid;grid-template-columns:1fr 90px;gap:12px">
+        <div class="field"><label for="c-name">竞品名称</label><input class="input" id="c-name" name="name" value="${esc(c.name)}" placeholder="例如：飞书文档" maxlength="20"></div>
+        <div class="field"><label for="c-mark">标识</label><input class="input" id="c-mark" name="mark" value="${esc(c.mark)}" placeholder="1–3 字" maxlength="3"></div></div>
+      <div class="field"><label for="c-src">来源</label><textarea class="input" id="c-src" name="src" rows="3" placeholder="每行一个：官方更新日志、博客地址，或「新闻检索」">${esc(c.src.split(' · ').join('\n'))}</textarea></div>`,
+    onOk(f, err) { const name = val(f, 'name'), src = val(f, 'src');
+      if (!name) { err('填写竞品名称'); return false; } if (!src) { err('至少填一个来源'); return false; }
+      Object.assign(c, { name, mark: val(f, 'mark') || name.slice(0, 1), src: src.split('\n').map(x => x.trim()).filter(Boolean).join(' · ') });
+      if (isNew) COMP.push(c); renderComp(); dirty(); toast(isNew ? `已添加「${name}」，下次抓取时开始收录` : `已更新「${name}」`); } });
+}
+document.getElementById('comp').addEventListener('click', e => { const b = e.target.closest('[data-ec]'); if (b) editComp(COMP[+b.dataset.ec]); });
+document.getElementById('add-comp').onclick = () => editComp();
+
+const PALETTE = ['#9a4fe0', '#0e9a82', '#3a40f0', '#e8830c', '#4f9a1e', '#8a8da0', '#d6457a', '#1d8fd6'];
+const RULES = {
+  inline: 'AI 直接在文档、表格、幻灯片的正文或评论里工作，不用切到单独的窗口。',
+  agent:  'AI 作为独立角色领任务、跨应用执行，或以独立 App 的形式出现。',
+  deck:   '从一句话或一组资料，直接生成完整的文档、表格或演示。',
+  ship:   'AI 产出物的格式、打开方式，以及导入导出。',
+  meet:   '会议录音、笔记、截图转成文档。',
+  scope:  '语言、地区、套餐、价格和开放范围的变化。' };
+const TOP = Object.keys(T).map((t, k) => ({ id: t, name: T[t][0], color: PALETTE[k], rule: RULES[t] }));
+function renderTopics() {
+  document.getElementById('tps').innerHTML = TOP.map((t, k) => `
+    <tr class="${t.fresh ? 'row-new' : ''}">
+      <td style="white-space:nowrap"><div class="cell"><span class="swatch" style="background:${t.color}"></span><b>${esc(t.name)}</b></div></td>
+      <td>${esc(t.rule)}</td>
+      <td class="r num" style="color:var(--ink);font-weight:600">${t.fresh ? '—' : `<a href="feed.html#t-${t.id}">${U.filter(u => u[2] === t.id).length}</a>`}</td>
+      <td class="r"><button class="icon-btn" data-et="${k}" aria-label="编辑 ${esc(t.name)}"><svg class="i"><use href="#i-edit"/></svg></button></td>
+    </tr>`).join('');
+  document.getElementById('topic-title').innerHTML = `主题分类<small>${TOP.length} 个</small>`;
+  document.getElementById('k-topic').textContent = document.getElementById('n-topic').textContent = TOP.length;
+}
+function editTopic(t) {
+  const isNew = !t; t = t || { id: 'new' + Date.now(), name: '', color: PALETTE[6], rule: '', fresh: true };
+  modal({ title: isNew ? '添加主题' : `编辑「${t.name}」`, sub: '改了判定说明后，新收录的动态按新说明归类', ok: isNew ? '添加' : '保存',
+    body: `<div class="field"><label for="t-name">主题名称</label><input class="input" id="t-name" name="name" value="${esc(t.name)}" maxlength="8" placeholder="不超过 8 个字"></div>
+      <div class="field"><span class="lbl">颜色</span><div class="colors">${PALETTE.map(c => `<label style="background:${c}"><input type="radio" name="color" value="${c}"${c === t.color ? ' checked' : ''} aria-label="颜色 ${c}"></label>`).join('')}</div></div>
+      <div class="field"><label for="t-rule">怎么判定</label><textarea class="input" id="t-rule" name="rule" rows="3" placeholder="写给 AI：什么样的动态归到这一类">${esc(t.rule)}</textarea></div>`,
+    onOk(f, err) { const name = val(f, 'name'), rule = val(f, 'rule');
+      if (!name) { err('填写主题名称'); return false; } if (rule.length < 8) { err('判定说明写具体一点，至少 8 个字'); return false; }
+      Object.assign(t, { name, rule, color: f.querySelector('[name=color]:checked').value });
+      if (isNew) TOP.push(t); renderTopics(); dirty(); toast(isNew ? `已添加主题「${name}」` : `已更新「${name}」`); } });
+}
+document.getElementById('tps').addEventListener('click', e => { const b = e.target.closest('[data-et]'); if (b) editTopic(TOP[+b.dataset.et]); });
+document.getElementById('add-topic').onclick = () => editTopic();
+
+const saveBtn = document.getElementById('btn-save');
+function dirty() { saveBtn.innerHTML = '<svg class="i"><use href="#i-check"/></svg>保存修改 ·'; }
+document.querySelectorAll('.form input, .form textarea').forEach(el => el.addEventListener('input', dirty));
+document.querySelectorAll('.form .switch, .form .seg button').forEach(el => el.addEventListener('click', dirty));
+saveBtn.onclick = () => {
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) { toast('空间名称不能为空', 'warn'); document.getElementById('f-name').focus(); return; }
+  busy(saveBtn, '保存中…', 700, () => {
+    document.getElementById('crumb-name').textContent = name; SPACES[0][1] = name; renderSpaces();
+    saveBtn.innerHTML = '<svg class="i"><use href="#i-check"/></svg>保存修改';
+    toast('已保存，下次抓取和推送按新配置执行');
+  });
+};
+document.getElementById('btn-copy').onclick = () => modal({
+  title: '复制为新空间', sub: '复制当前的主题分类、来源写法、推送规则和 AI 写作规则；竞品和订阅人可以在新空间里换掉', ok: '复制',
+  body: `<div class="field"><label for="cp-name">新空间名称</label><input class="input" id="cp-name" name="name" placeholder="例如：飞书多维表格" maxlength="20"></div>
+    <div class="field"><span class="lbl">一起复制</span><div class="pills">
+      <label class="pill"><input type="checkbox" name="w" value="c" checked>竞品与来源</label>
+      <label class="pill"><input type="checkbox" name="w" value="t" checked>主题分类</label>
+      <label class="pill"><input type="checkbox" name="w" value="a" checked>AI 写作规则</label>
+      <label class="pill"><input type="checkbox" name="w" value="s">订阅</label></div></div>`,
+  onOk(f, err) { const n = val(f, 'name'); if (!n) { err('填写新空间名称'); return false; }
+    SPACES.push([n.slice(0, 1), n, `从 ${SPACES[0][1]} 复制 · ${COMP.length} 个竞品`]); renderSpaces(); toast(`已创建空间「${n}」`); },
+});
+document.getElementById('btn-hook').onclick = e => busy(e.currentTarget, '发送中', 900, () => toast('测试消息已发到机器人所在的群'));
+
+renderComp(); renderTopics();
+
+/* 子导航高亮跟随滚动 */
+const links = [...document.querySelectorAll('.subnav a')];
+const secs = links.map(a => document.querySelector(a.getAttribute('href')));
+addEventListener('scroll', () => {
+  let k = 0; secs.forEach((s, i) => { if (s.getBoundingClientRect().top < 140) k = i; });
+  links.forEach((a, i) => a.classList.toggle('on', i === k));
+}, { passive: true });
+</script>
+</body>
+</html>
