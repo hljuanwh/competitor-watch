@@ -25,7 +25,7 @@
       <section class="hero" aria-label="任务概况">
         <div>
           <h1>每天 09:00 自动抓取</h1>
-          <p>平台每天读一遍 8 个竞品的 12 个来源。发现新内容先去重，确认是新动态再交给 AI 写摘要、归主题，最后按订阅推送。哪个来源连续失败，会在这里标出来。</p>
+          <p id="hero-p">平台每天读一遍 8 个竞品的 12 个来源。发现新内容先去重，确认是新动态再交给 AI 写摘要、归主题，最后按订阅推送。哪个来源连续失败，会在这里标出来。</p>
           <div class="hero-meta" id="hero-meta"></div>
         </div>
         <div class="kpis" id="kpis"></div>
@@ -56,7 +56,7 @@
         <div class="aside">
           <section class="panel" aria-label="数据源">
             <div class="block">
-              <div class="block-title"><h2>数据源<small>12 个</small><span class="demo">示意</span></h2><a class="link" href="config.html#sources">管理</a></div>
+              <div class="block-title"><h2>数据源<small id="src-n">12 个</small><span class="demo">示意</span></h2><a class="link" href="config.html#sources">管理</a></div>
               <div id="sources"></div>
             </div>
             <div class="block">
@@ -76,39 +76,32 @@
 </div>
 
 <script src="data.js"></script>
+<script src="data-b2b.js"></script>
+<script src="data-news.js"></script>
+<script src="spaces.js"></script>
 <script src="shell.js"></script>
 <script>
-const { D, P, U, esc, inMonth, toast, busy } = CW;
+const { SP, FAILING, subHits, D, P, U, esc, inMonth, toast, busy } = CW;
 CW.side('tasks');
 
-const SRC = [
-  ['Google Workspace Updates', 'google', 'Google Workspace · 官方'],
-  ['Gemini for Workspace 博客', 'google', 'Google Workspace · 官方'],
-  ['Microsoft 365 Copilot 发布说明', 'ms', 'Microsoft 365 · 官方'],
-  ['Microsoft Copilot 博客', 'ms', 'Microsoft 365 · 官方'],
-  ['Notion 发布说明', 'notion', 'Notion · 官方'],
-  ['OpenAI 发布说明', 'gpt', 'ChatGPT · 官方'],
-  ['Claude 更新日志', 'claude', 'Claude · 官方'],
-  ['腾讯文档更新日志', 'tx', '腾讯文档 · 官方'],
-  ['WPS 更新日志', 'wps', 'WPS · 官方'],
-  ['钉钉文档更新日志', 'dd', '钉钉文档 · 官方', true],
-  ['新闻检索 · 中文媒体', '', '全部竞品 · 媒体'],
-  ['新闻检索 · 英文媒体', '', '全部竞品 · 媒体'],
-];
-let ddFailing = true;
+/* 数据源来自当前空间（spaces.js）；第 4 项为 true 的来源演示「连续超时」 */
+const SRC = SP.SRC, N = SRC.length, BAD = FAILING ? FAILING[0] : '';
+document.getElementById('hero-p').textContent = `平台每天读一遍 ${SP.ORDER.length} 个${SP.unit}的 ${N} 个来源。发现新内容先去重，确认是新动态再交给 AI 写摘要、归主题，最后按订阅推送。哪个来源连续失败，会在这里标出来。`;
+document.getElementById('src-n').textContent = `${N} 个`;
+let ddFailing = !!FAILING;
 
 /* 最近一次有新动态的那天 */
 const LAST = U[0][0], lastIdx = U.map((_, i) => i).filter(i => U[i][0] === LAST);
-const RT_GROUPS = [['CCM 产品组', () => true], ['幻灯片小组', i => ['ms', 'google', 'gpt'].includes(U[i][1]) && ['deck', 'inline'].includes(U[i][2])]];
+const RT_GROUPS = SP.SEED.filter(s => s.on && s.kind === 'group' && s.k.includes('rt')).map(s => [s.name, i => subHits(s, i)]);
 const groupsFor = ids => RT_GROUPS.filter(([, f]) => ids.some(f)).map(([g]) => g);
 
 function header() {
   const ok = SRC.length - (ddFailing ? 1 : 0);
   document.getElementById('hero-meta').innerHTML = ddFailing
-    ? '<span class="chip">1 个来源需处理</span>钉钉文档更新日志连续 3 天超时'
-    : '<span class="chip" style="background:var(--ok-soft);color:var(--ok)">全部正常</span>12 个来源都能正常读取';
+    ? `<span class="chip">1 个来源需处理</span>${BAD}连续 3 天超时`
+    : `<span class="chip" style="background:var(--ok-soft);color:var(--ok)">全部正常</span>${N} 个来源都能正常读取`;
   document.getElementById('kpis').innerHTML = `
-    <div class="kpi"><div class="kpi-value num">12</div><div class="kpi-label">数据源<span class="demo">示意</span></div></div>
+    <div class="kpi"><div class="kpi-value num">${N}</div><div class="kpi-label">数据源<span class="demo">示意</span></div></div>
     <div class="kpi"><div class="kpi-value num">${ok}</div><div class="kpi-label">运行正常</div></div>
     <div class="kpi"><div class="kpi-value num">${SRC.length - ok}</div><div class="kpi-label">需处理</div></div>
     <div class="kpi"><div class="kpi-value num">09:00</div><div class="kpi-label">下次抓取 · 11 月 16 日</div></div>`;
@@ -118,7 +111,7 @@ function header() {
 const STEPS = () => {
   const g = groupsFor(lastIdx);
   return [
-    ['抓取', 12, '个来源', ddFailing ? '11 个成功，1 个超时' : '12 个全部成功'],
+    ['抓取', N, '个来源', ddFailing ? `${N - 1} 个成功，1 个超时` : `${N} 个全部成功`],
     ['发现候选', lastIdx.length + 2, '条', '来源里新出现的条目'],
     ['去重确认', lastIdx.length, '条新动态', '2 条是已收录动态的转载'],
     ['AI 撰写', lastIdx.length, '篇', '摘要、主题、解读'],
@@ -134,7 +127,7 @@ function flow(state = 'done', at = 5) {
   document.getElementById('flow').innerHTML = STEPS().map(([name, v, unit, desc], k) => {
     const cls = state === 'run' ? (k < at ? '' : k === at ? ' now' : ' wait') : '';
     const icon = cls === ' now' ? '<svg class="i spin"><use href="#i-refresh"/></svg>' : cls === ' wait' ? '' : '<svg class="i"><use href="#i-check"/></svg>';
-    const showV = state === 'run' ? (k < at ? (k === 0 ? 12 : 0) : '—') : v;
+    const showV = state === 'run' ? (k < at ? (k === 0 ? N : 0) : '—') : v;
     return `<div class="step${cls}"><div class="step-dot">${icon}</div><div class="step-name">${name}</div><div class="step-val num">${showV}<small>${unit}</small></div><div class="step-desc">${state === 'run' ? (k < at ? (k === 0 ? '读取完成' : '没有新内容') : '等待中') : esc(desc)}</div></div>`;
   }).join('');
 }
@@ -152,9 +145,9 @@ function buildRuns() {
       rows.push([`${d} 09:10`, 'push', esc(ids.map(i => U[i][4]).join('；')), ['ok', `${g.length} 个群`], '4 秒']);
       rows.push([`${d} 09:06`, 'write', esc(ids.map(i => U[i][4]).join('；')), ['ok', '完成'], `${ids.length * 38} 秒`]);
     }
-    rows.push([`${d} 09:00`, 'crawl', '12 个来源', [fail ? 'warn' : 'ok', `${ids.length ? `新增 ${ids.length}` : '无新增'}${fail ? ' · 1 个超时' : ''}`], fail ? '6 分 48 秒' : '4 分 26 秒']);
+    rows.push([`${d} 09:00`, 'crawl', `${N} 个来源`, [fail ? 'warn' : 'ok', `${ids.length ? `新增 ${ids.length}` : '无新增'}${fail ? ' · 1 个超时' : ''}`], fail ? '6 分 48 秒' : '4 分 26 秒']);
   }
-  rows.push(['10-31 18:01', 'push', '10 月月报推送到 3 个群', ['ok', '已送达'], '6 秒']);
+  rows.push(['10-31 18:01', 'push', `10 月月报推送到 ${SP.SEED.filter(s => s.on && s.kind === 'group' && s.k.includes('mon')).length} 个群`, ['ok', '已送达'], '6 秒']);
   rows.push(['10-31 18:00', 'mon', `生成 10 月月报，依据 ${inMonth(10).length} 条动态`, ['ok', '完成'], '2 分 14 秒']);
   return rows;
 }
@@ -179,8 +172,8 @@ document.getElementById('sources').addEventListener('click', e => {
   const b = e.target.closest('[data-retry]'); if (!b) return;
   busy(b, '重试中', 1500, () => {
     ddFailing = false; RUNS = buildRuns();
-    RUNS.unshift(['11-15 ' + new Date().toTimeString().slice(0, 5), 'crawl', '钉钉文档更新日志（手动重试）', ['ok', '成功 · 无新增'], '41 秒']);
-    header(); flow(); runs(); sources(); toast('钉钉文档更新日志已恢复，没有新内容');
+    RUNS.unshift(['11-15 ' + new Date().toTimeString().slice(0, 5), 'crawl', `${BAD}（手动重试）`, ['ok', '成功 · 无新增'], '41 秒']);
+    header(); flow(); runs(); sources(); toast(`${BAD}已恢复，没有新内容`);
   });
 });
 document.getElementById('f-type').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { ftype = b.dataset.v; runs(); } });
@@ -189,8 +182,8 @@ document.getElementById('btn-crawl').onclick = e => {
   busy(btn, '抓取中…', 3200);
   flow('run', 0);
   const tick = setInterval(() => { at++; flow('run', at); if (at >= 5) { clearInterval(tick); setTimeout(() => {
-    RUNS.unshift(['11-15 ' + new Date().toTimeString().slice(0, 5), 'crawl', '12 个来源（手动）', [ddFailing ? 'warn' : 'ok', `无新增${ddFailing ? ' · 1 个超时' : ''}`], '3 秒']);
-    flow(); runs(); toast(ddFailing ? '抓取完成：没有新动态，钉钉文档更新日志仍然超时' : '抓取完成：没有新动态', ddFailing ? 'warn' : ''); }, 300); } }, 550);
+    RUNS.unshift(['11-15 ' + new Date().toTimeString().slice(0, 5), 'crawl', `${N} 个来源（手动）`, [ddFailing ? 'warn' : 'ok', `无新增${ddFailing ? ' · 1 个超时' : ''}`], '3 秒']);
+    flow(); runs(); toast(ddFailing ? `抓取完成：没有新动态，${BAD}仍然超时` : '抓取完成：没有新动态', ddFailing ? 'warn' : ''); }, 300); } }, 550);
 };
 
 header(); flow(); runs(); sources();

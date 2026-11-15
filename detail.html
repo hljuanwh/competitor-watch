@@ -34,11 +34,7 @@
             </div>
             <div class="block">
               <div class="block-title"><h2>推送情况<span class="demo">示意</span></h2></div>
-              <div class="list-plain">
-                <div><span><b>CCM 产品组</b> · 实时动态</span><span class="st ok">已送达</span></div>
-                <div><span><b>幻灯片小组</b> · 实时动态</span><span class="st ok">已送达</span></div>
-                <div><span><b>国内竞品观察</b> · 每日汇总</span><span class="st idle">不在范围</span></div>
-              </div>
+              <div class="list-plain" id="push-list"></div>
             </div>
           </section>
 
@@ -55,18 +51,18 @@
 </div>
 
 <script src="data.js"></script>
+<script src="data-b2b.js"></script>
+<script src="data-news.js"></script>
+<script src="spaces.js"></script>
 <script src="shell.js"></script>
 <script>
-const { D, P, T, U, esc, md, kindHTML, tagHTML, logoHTML, modal, val, checked, toast, pushDialog } = CW;
+const { SP, subHits, D, P, T, U, esc, md, kindHTML, tagHTML, logoHTML, modal, val, checked, toast, pushDialog } = CW;
 CW.side('feed');
 
-/* 完整解读样例：7/28 Google Docs 评论；其余条目显示同样的版式 */
-const SAMPLE = U.findIndex(u => u[4].includes('接管评论'));
-const AI = {
-  [SAMPLE]: `<p>7 月有两家厂商把 AI 放进了评论区：7 月 28 日，Google Docs 的 Gemini 能归纳评论串、代拟回复；7 月 31 日，Microsoft 的 PowerPoint Copilot 能写评论、回复并标记解决。评论原本是协作者之间沟通的地方，现在 AI 也能参与进来。</p>
-      <p>Google 把这项能力限定给有编辑权限的用户。谁能让 AI 改评论、改正文，是这类功能落地前要先回答的问题。</p>
-      <p>可以拿来对照的问题：我们的文档评论里，AI 现在能做到哪一步？总结、代拟回复，还是直接改正文？</p>`,
-};
+/* 完整解读样例：每个空间写了一条（spaces.js 的 SAMPLE），其余条目显示同样的版式 */
+const SAMPLE = Math.max(0, U.findIndex(u => u[4].includes(SP.SAMPLE.find)));
+const AI = { [SAMPLE]: SP.SAMPLE.html };
+const KL = { rt: '实时动态', daily: '每日汇总', mon: '月报', year: '年报' };
 
 function render() {
   const m = /^#u(\d+)$/.exec(location.hash);
@@ -92,7 +88,7 @@ function render() {
 
     <h2 class="sec" id="s-ai">为什么值得关注<span class="kind blue"><svg class="i" style="width:11px;height:11px"><use href="#i-spark"/></svg>AI 解读</span></h2>
     <div class="ai-box">
-      ${AI[i] || `<p style="color:var(--ink-3)">设计稿只为「Docs 里的 Gemini 接管评论」这一条写了完整解读，这里显示同样的位置。<a class="link" href="detail.html#u${SAMPLE}">看样例</a></p>`}
+      ${AI[i] || `<p style="color:var(--ink-3)">设计稿只为「${esc(U[SAMPLE][4])}」这一条写了完整解读，这里显示同样的位置。<a class="link" href="detail.html#u${SAMPLE}">看样例</a></p>`}
     </div>
 
     <h2 class="sec" id="s-same">同主题的 ${mo} 月动态${tagHTML(t)}<small>${same.length} 条</small></h2>
@@ -115,6 +111,10 @@ function render() {
     const [dj, pj, tj, , tl] = U[j]; const x = md(dj);
     return `<a href="detail.html#u${j}">${logoHTML(pj, true)}<span><span class="t">${esc(tl)}</span><small>${x.m} 月 ${x.day} 日 · ${T[tj][0]}</small></span></a>`;
   }).join('') : `<p class="note" style="margin:0">${P[p].name} ${mo} 月只有这一条。<a class="link" href="feed.html#p-${p}">看全部</a></p>`;
+  /* 推送情况：当前空间前三个群订阅，按订阅条件判断这条会不会发过去（示意） */
+  document.getElementById('push-list').innerHTML = SP.SEED.filter(s => s.kind === 'group').slice(0, 3).map(s => {
+    const k = s.k.find(x => x === 'rt' || x === 'daily') || s.k[0], hit = s.on && (k === 'rt' || k === 'daily') && subHits(s, i);
+    return `<div><span><b>${esc(s.name)}</b> · ${KL[k]}</span><span class="st ${hit ? 'ok' : 'idle'}">${hit ? '已送达' : k === 'mon' ? '进月报' : '不在范围'}</span></div>`; }).join('');
   const prev = document.getElementById('prev'), next = document.getElementById('next');
   prev.toggleAttribute('hidden', i === 0); prev.href = `detail.html#u${i - 1}`;
   next.toggleAttribute('hidden', i === U.length - 1); next.href = `detail.html#u${i + 1}`;

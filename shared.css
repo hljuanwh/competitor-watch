@@ -544,3 +544,36 @@ mark.hit { background: #ffe9a8; color: inherit; border-radius: 2px; padding: 0 1
   .f-label { width: 100%; }
   .search { max-width: none; }
 }
+
+/* ===== 观测空间切换 ===== */
+.space-wrap { position: relative; }
+.space .i { transition: transform .15s; }
+.space[aria-expanded="true"] { border-color: var(--ink-3); }
+.space[aria-expanded="true"] .i { transform: rotate(180deg); }
+.space-menu { position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 30; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 12px 32px rgba(21, 24, 46, .14); padding: 6px; display: flex; flex-direction: column; gap: 2px; }
+.space-menu a { display: grid; grid-template-columns: 28px minmax(0, 1fr) 16px; gap: 9px; align-items: center; padding: 7px 8px; border-radius: 7px; font-size: 13px; color: var(--ink-2); }
+.space-menu a:hover, .space-menu a:focus-visible { background: var(--surface-sunk); outline: none; }
+.space-menu b { display: block; font-weight: 500; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.space-menu a.on b { color: var(--ink); font-weight: 600; }
+.space-menu small { display: block; font-size: 11.5px; color: var(--ink-3); white-space: nowrap; }
+.space-menu .av { width: 28px; height: 28px; font-size: 11px; }
+.space-menu a.on .av { background: var(--brand); color: #fff; border-color: var(--brand); }
+.space-menu a > svg.i { color: var(--ink); }
+.space-menu .space-menu-foot { grid-template-columns: 16px minmax(0, 1fr); border-top: 1px solid var(--line-soft); border-radius: 0 0 7px 7px; margin-top: 4px; padding-top: 9px; color: var(--ink-3); font-size: 12.5px; }
+.m-space { display: none; }
+@media (max-width: 860px) {
+  .m-space { display: flex; align-items: center; gap: 8px; padding: 12px 16px 0; font-size: 12px; color: var(--ink-3); }
+  .m-space select { flex: 1; min-width: 0; font: inherit; font-size: 14px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; }
+}
+
+/* 新空间用到的标识色 */
+.l-feishu { background: #e8f0ff; color: #1456f0; }
+.l-wecom { background: #e7f6ee; color: #198a4a; }
+.l-slack { background: #f4ebf5; color: #611f69; }
+.l-x { background: #ececef; color: #15182e; }
+.l-meta { background: #e8efff; color: #0a5ce0; }
+.l-deepseek { background: #ebefff; color: #4258e8; font-size: 11px; }
+.l-ali { background: #fff0e6; color: #d4580b; }
+.l-kimi { background: #eeeef3; color: #2b2d42; }
+.l-other { background: #f0f0f3; color: #5b5e72; }
+.logo.sm.l-deepseek { font-size: 8.5px; }

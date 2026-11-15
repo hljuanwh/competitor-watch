@@ -60,7 +60,7 @@
               <div class="block-title"><h2 id="src-title"></h2></div>
               <div class="stack" aria-hidden="true" id="stack"></div>
               <div class="src-list" id="src-list"></div>
-              <p class="note">官方来源：Google Workspace Updates、Microsoft Copilot 博客、Notion 发布说明、Claude 更新日志。</p>
+              <p class="note" id="src-note"></p>
             </div>
             <div id="reports"></div>
           </section>
@@ -71,9 +71,13 @@
 </div>
 
 <script src="data.js"></script>
+<script src="data-b2b.js"></script>
+<script src="data-news.js"></script>
+<script src="spaces.js"></script>
 <script src="shell.js"></script>
 <script>
-const { D, P, ORDER, T, U, esc, inMonth, feedHTML, logoHTML, toast, busy, pushDialog } = CW;
+const { SP, D, P, ORDER, T, U, esc, inMonth, feedHTML, logoHTML, toast, busy, pushDialog } = CW;
+document.getElementById('src-note').textContent = SP.srcNote;
 CW.side('index');
 
 const M = D.LATEST_FULL, R = D.REPORT[M];
@@ -151,7 +155,7 @@ document.getElementById('reports').innerHTML = [M, M - 1].map(m => `
 
 /* ---------- 顶栏按钮 ---------- */
 document.getElementById('btn-push').onclick = () => pushDialog(`${M} 月月报 · ${strip(R.h1)}`);
-document.getElementById('btn-crawl').onclick = e => busy(e.currentTarget, '抓取中…', 1600, () => toast('抓取完成：12 个来源都没有新动态'));
+document.getElementById('btn-crawl').onclick = e => busy(e.currentTarget, '抓取中…', 1600, () => toast(`抓取完成：${SP.SRC.length} 个来源都没有新动态`));
 </script>
 </body>
 </html>

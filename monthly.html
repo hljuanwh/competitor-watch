@@ -60,9 +60,12 @@
 </div>
 
 <script src="data.js"></script>
+<script src="data-b2b.js"></script>
+<script src="data-news.js"></script>
+<script src="spaces.js"></script>
 <script src="shell.js"></script>
 <script>
-const { D, P, ORDER, T, U, esc, md, inMonth, kindHTML, logoHTML, toast, busy, pushDialog } = CW;
+const { SP, D, P, ORDER, T, U, esc, md, inMonth, kindHTML, logoHTML, toast, busy, pushDialog } = CW;
 CW.side('monthly');
 
 const strip = h => h.replace(/<[^>]+>/g, '');
@@ -116,7 +119,7 @@ function render() {
   document.getElementById('chat').innerHTML = `
     <div class="chat-head"><svg viewBox="0 0 32 32"><use href="#mark"/></svg><b>竞品观测</b>机器人 · ${R.partial ? '11-30 18:00 发送' : `${M}-${last(M)} 18:00`}</div>
     <div class="msg">
-      <div class="msg-head">${M} 月竞品月报${R.partial ? '（预览）' : ''}<span>CCM 云文档</span></div>
+      <div class="msg-head">${M} 月竞品月报${R.partial ? '（预览）' : ''}<span>${esc(SP.name)}</span></div>
       <div class="msg-body">
         <h4>${strip(R.h1)}</h4>
         ${idx.length} 条新动态${delta != null && !R.partial ? `，比 ${M - 1} 月${delta >= 0 ? '多' : '少'} ${Math.abs(delta)} 条` : ''}。主要集中在：
@@ -126,7 +129,7 @@ function render() {
     </div>`;
   document.getElementById('pushlog').innerHTML = R.partial
     ? `<div><span>11 月月报</span><span class="st idle">11-30 18:00 发送</span></div>`
-    : [['CCM 产品组', 42], ['文档 AI 设计周会', 18], ['国内竞品观察', 26]].map(([g, n]) => `<div><span><b>${g}</b> · ${n} 人</span><span class="st ok">已送达</span></div>`).join('');
+    : SP.SEED.filter(s => s.on && s.kind === 'group' && s.k.includes('mon')).map(({ name: g, size: n }) => `<div><span><b>${g}</b> · ${n} 人</span><span class="st ok">已送达</span></div>`).join('');
 
   document.getElementById('btn-push').disabled = !!R.partial;
   document.getElementById('btn-push').title = R.partial ? '本月还没结束，月末自动推送' : '';

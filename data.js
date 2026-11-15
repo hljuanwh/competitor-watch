@@ -148,3 +148,6 @@ const REPORT = {
 
 return { NOW: '2026-11-15', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
 })();
+
+/* 注册为「CCM 云文档」空间的数据 */
+(window.CW_SPACES = window.CW_SPACES || {}).ccm = window.CW_DATA;

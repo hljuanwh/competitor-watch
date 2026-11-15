@@ -26,13 +26,13 @@
         <div>
           <h1>换一套竞品，就是另一个团队的平台</h1>
           <p>平台的竞品、主题分类、来源、推送渠道和 AI 写作规则都在这里改。复制一份空间，换成自己的竞品和订阅人，就能给别的团队用。</p>
-          <div class="hero-meta"><span class="chip">5 个团队在用</span>每个团队一个观测空间，互不影响</div>
+          <div class="hero-meta"><span class="chip" id="n-spaces-chip">3 个观测空间</span>每个空间的竞品、主题和订阅互不影响</div>
         </div>
         <div class="kpis">
-          <div class="kpi"><div class="kpi-value num">5</div><div class="kpi-label">观测空间</div></div>
+          <div class="kpi"><div class="kpi-value num" id="k-spaces">3</div><div class="kpi-label">观测空间</div></div>
           <div class="kpi"><div class="kpi-value num" id="k-comp">8</div><div class="kpi-label">本空间竞品</div></div>
           <div class="kpi"><div class="kpi-value num" id="k-topic">6</div><div class="kpi-label">主题分类</div></div>
-          <div class="kpi"><div class="kpi-value num">12</div><div class="kpi-label">数据源<span class="demo">示意</span></div></div>
+          <div class="kpi"><div class="kpi-value num" id="k-src">12</div><div class="kpi-label">数据源<span class="demo">示意</span></div></div>
         </div>
       </section>
 
@@ -51,7 +51,7 @@
             <div class="form">
               <div class="form-row"><label class="lbl" for="f-name">空间名称</label><input class="input" id="f-name" value="CCM 云文档"></div>
               <div class="form-row"><label class="lbl" for="f-desc">一句话说明<small>显示在顶栏面包屑后</small></label><input class="input" id="f-desc" value="在线文档、表格、幻灯片与文档内 AI"></div>
-              <div class="form-row top"><span class="lbl">全部空间<small>5 个团队各用一个</small></span>
+              <div class="form-row top"><span class="lbl">全部空间<small>点一下切换过去</small></span>
                 <div id="spaces"></div>
               </div>
             </div>
@@ -125,18 +125,33 @@
 </div>
 
 <script src="data.js"></script>
+<script src="data-b2b.js"></script>
+<script src="data-news.js"></script>
+<script src="spaces.js"></script>
 <script src="shell.js"></script>
 <script>
-const { P, ORDER, T, U, esc, logoHTML, modal, val, toast, busy } = CW;
+const { SP, SPACES: LIST, HEX, srcOf, FAILING, withSpace, P, ORDER, T, U, esc, logoHTML, modal, val, toast, busy } = CW;
+document.getElementById('f-name').value = SP.name;
+document.getElementById('f-desc').value = SP.desc;
+document.getElementById('f-title').value = `${SP.unit === '竞品' ? '竞品新动态' : 'AI 新动态'} · ${SP.name}`;
+document.getElementById('k-src').textContent = SP.SRC.length;
 CW.side('config');
 
-const SPACES = [['C', 'CCM 云文档', '当前空间 · 8 个竞品'], ['幻', '幻灯片', '6 个竞品'], ['表', '多维表格', '7 个竞品'], ['知', '知识库', '5 个竞品'], ['会', '会议纪要', '6 个竞品']];
-const renderSpaces = () => document.getElementById('spaces').innerHTML = SPACES.map(([a, n, s], i) => `
-  <div class="space-card"><span class="av">${esc(a)}</span><span><b style="font-weight:500;color:var(--ink)">${esc(n)}</b>${i ? '' : ' <span class="kind off" style="margin-left:4px">当前</span>'}<small style="display:block;font-size:12px;color:var(--ink-3)">${esc(s)}</small></span>${i ? '<span class="demo">示意</span>' : ''}</div>`).join('');
+/* 全部空间：当前空间排第一，其余可点过去；「复制为新空间」新建的只在本页演示 */
+const SPACES = [...LIST.filter(s => s.key === SP.key), ...LIST.filter(s => s.key !== SP.key)].map(s => [s.av, s.name, `${s.comps} 个${s.unit} · 累计 ${s.total} 条`, s.key]);
+const renderSpaces = () => {
+  document.getElementById('spaces').innerHTML = SPACES.map(([a, n, s, k], i) => {
+    const inner = `<span class="av">${esc(a)}</span><span><b style="font-weight:500;color:var(--ink)">${esc(n)}</b>${i ? '' : ' <span class="kind off" style="margin-left:4px">当前</span>'}<small style="display:block;font-size:12px;color:var(--ink-3)">${esc(s)}</small></span>`;
+    return k && i ? `<a class="space-card" href="${withSpace('config.html', k)}" data-space="${k}">${inner}<svg class="i" style="color:var(--ink-3)"><use href="#i-right"/></svg></a>`
+      : `<div class="space-card">${inner}${k ? '' : '<span class="demo">示意</span>'}</div>`; }).join('');
+  document.getElementById('k-spaces').textContent = SPACES.length;
+  document.getElementById('n-spaces-chip').textContent = `${SPACES.length} 个观测空间`;
+};
+document.getElementById('spaces').addEventListener('click', e => { const a = e.target.closest('[data-space]'); if (a) CW.store.raw('space', a.dataset.space); });
 renderSpaces();
 
-const SRCS = { google: 'Google Workspace Updates · Gemini for Workspace 博客', ms: 'Microsoft 365 Copilot 发布说明 · Microsoft Copilot 博客', notion: 'Notion 发布说明',
-  gpt: 'OpenAI 发布说明 · 新闻检索', claude: 'Claude 更新日志', tx: '腾讯文档更新日志 · 新闻检索', wps: 'WPS 更新日志 · 新闻检索', dd: '钉钉文档更新日志' };
+/* 来源：该竞品的官方来源；有媒体条目的再加「新闻检索」 */
+const SRCS = Object.fromEntries(ORDER.map(p => [p, [...srcOf(p), ...(U.some(u => u[1] === p && u[3] === 'media') ? ['新闻检索'] : [])].join(' · ') || '新闻检索']));
 const COMP = ORDER.map(p => ({ id: p, name: P[p].name, mark: P[p].mark, cls: P[p].cls, src: SRCS[p] }));
 function renderComp() {
   document.getElementById('comp').innerHTML = COMP.map((c, k) => { const n = U.filter(u => u[1] === c.id), last = n[0];
@@ -145,7 +160,7 @@ function renderComp() {
       <td class="muted">${esc(c.src)}</td>
       <td class="r num" style="color:var(--ink);font-weight:600">${n.length}</td>
       <td class="muted num" style="white-space:nowrap">${last ? `<a href="detail.html#u${U.indexOf(last)}">${last[0]}</a>` : c.fresh ? '等待首次抓取' : '—'}</td>
-      <td>${c.id === 'dd' ? '<a class="st warn" href="tasks.html">需处理</a>' : c.fresh ? '<span class="st run">待抓取</span>' : '<span class="st ok">正常</span>'}</td>
+      <td>${FAILING && c.id === FAILING[1] ? '<a class="st warn" href="tasks.html">需处理</a>' : c.fresh ? '<span class="st run">待抓取</span>' : '<span class="st ok">正常</span>'}</td>
       <td class="r"><button class="icon-btn" data-ec="${k}" aria-label="编辑 ${esc(c.name)}"><svg class="i"><use href="#i-edit"/></svg></button></td>
     </tr>`; }).join('');
   const nsrc = COMP.reduce((a, c) => a + c.src.split('·').filter(x => !x.includes('新闻检索')).length, 0) + 2;
@@ -168,14 +183,8 @@ document.getElementById('comp').addEventListener('click', e => { const b = e.tar
 document.getElementById('add-comp').onclick = () => editComp();
 
 const PALETTE = ['#9a4fe0', '#0e9a82', '#3a40f0', '#e8830c', '#4f9a1e', '#8a8da0', '#d6457a', '#1d8fd6'];
-const RULES = {
-  inline: 'AI 直接在文档、表格、幻灯片的正文或评论里工作，不用切到单独的窗口。',
-  agent:  'AI 作为独立角色领任务、跨应用执行，或以独立 App 的形式出现。',
-  deck:   '从一句话或一组资料，直接生成完整的文档、表格或演示。',
-  ship:   'AI 产出物的格式、打开方式，以及导入导出。',
-  meet:   '会议录音、笔记、截图转成文档。',
-  scope:  '语言、地区、套餐、价格和开放范围的变化。' };
-const TOP = Object.keys(T).map((t, k) => ({ id: t, name: T[t][0], color: PALETTE[k], rule: RULES[t] }));
+/* 主题名、颜色和判定说明都来自当前空间（spaces.js） */
+const TOP = Object.keys(T).map((t, k) => ({ id: t, name: T[t][0], color: HEX[T[t][1]] || PALETTE[k], rule: T[t][2] }));
 function renderTopics() {
   document.getElementById('tps').innerHTML = TOP.map((t, k) => `
     <tr class="${t.fresh ? 'row-new' : ''}">
@@ -223,7 +232,7 @@ document.getElementById('btn-copy').onclick = () => modal({
       <label class="pill"><input type="checkbox" name="w" value="a" checked>AI 写作规则</label>
       <label class="pill"><input type="checkbox" name="w" value="s">订阅</label></div></div>`,
   onOk(f, err) { const n = val(f, 'name'); if (!n) { err('填写新空间名称'); return false; }
-    SPACES.push([n.slice(0, 1), n, `从 ${SPACES[0][1]} 复制 · ${COMP.length} 个竞品`]); renderSpaces(); toast(`已创建空间「${n}」`); },
+    SPACES.push([n.slice(0, 1), n, `从 ${SPACES[0][1]} 复制 · ${COMP.length} 个${SP.unit}`, '']); renderSpaces(); toast(`已创建空间「${n}」`); },
 });
 document.getElementById('btn-hook').onclick = e => busy(e.currentTarget, '发送中', 900, () => toast('测试消息已发到机器人所在的群'));
 

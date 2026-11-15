@@ -90,6 +90,9 @@
 </div>
 
 <script src="data.js"></script>
+<script src="data-b2b.js"></script>
+<script src="data-news.js"></script>
+<script src="spaces.js"></script>
 <script src="shell.js"></script>
 <script>
 const { D, P, ORDER, T, U, esc, inMonth, logoHTML, modal, toast, busy } = CW;
@@ -108,7 +111,8 @@ document.getElementById('kpis').innerHTML = `
   <div class="kpi"><div class="kpi-value num">${new Set(U.map(u => u[1])).size}<sup class="down">/${ORDER.length}</sup></div><div class="kpi-label">有过更新的竞品</div></div>`;
 
 /* ---------- 柱状图 ---------- */
-const YMAX = 20, TICKS = [0, 5, 10, 15, 20];
+/* 纵轴按当前空间最多的月份取整到 5 */
+const YMAX = Math.max(20, Math.ceil(Math.max(...COLLECTED.map(cnt)) / 5) * 5), TICKS = Array.from({ length: YMAX / 5 + 1 }, (_, k) => k * 5);
 document.getElementById('cc-y').innerHTML = TICKS.map(v => `<span class="num" style="bottom:${v / YMAX * 100}%">${v}</span>`).join('');
 document.getElementById('cc-plot').innerHTML =
   TICKS.slice(1).map(v => `<div class="cc-line" style="bottom:${v / YMAX * 100}%"></div>`).join('') +

@@ -36,28 +36,16 @@ const SPRITE = `
   <symbol id="i-filter" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></symbol>`;
 document.body.insertAdjacentHTML('afterbegin', `<svg width="0" height="0" style="position:absolute" aria-hidden="true">${SPRITE}</svg>`);
 
-/* ---------- 数据：来自 data.js（7–11 月真实收录） ---------- */
-const D = window.CW_DATA;
-const P = {
-  google: { name: 'Google Workspace', mark: 'G',   cls: 'l-google' },
-  ms:     { name: 'Microsoft 365',   mark: 'M',   cls: 'l-ms' },
-  notion: { name: 'Notion',          mark: 'N',   cls: 'l-notion' },
-  tx:     { name: '腾讯文档',         mark: '腾',  cls: 'l-tx' },
-  dd:     { name: '钉钉文档',         mark: '钉',  cls: 'l-dd' },
-  wps:    { name: 'WPS',             mark: 'W',   cls: 'l-wps' },
-  claude: { name: 'Claude',          mark: 'Cl',  cls: 'l-claude' },
-  gpt:    { name: 'ChatGPT',         mark: 'GPT', cls: 'l-gpt' },
-};
-const ORDER = ['google', 'ms', 'notion', 'gpt', 'claude', 'tx', 'wps', 'dd'];
-const T = {
-  inline: ['正文内联',   'var(--t-inline)'],
-  agent:  ['Agent 协作', 'var(--t-agent)'],
-  deck:   ['一键成片',   'var(--t-deck)'],
-  ship:   ['交付导出',   'var(--t-ship)'],
-  meet:   ['会议沉淀',   'var(--t-meet)'],
-  scope:  ['覆盖与定价', 'var(--t-scope)'],
-};
+/* ---------- 数据：当前观测空间（spaces.js 选定；动态来自 data*.js，7–11 月真实收录） ---------- */
+const SP = window.CW_SPACE, SPACES = window.CW_SPACE_LIST;
+const D = SP, P = SP.P, ORDER = SP.ORDER, T = SP.T;
 const U = D.U;
+/* 带上当前空间的站内链接：index.html → index.html?s=b2b（CCM 是默认空间，不加参数） */
+const withSpace = (href, k = SP.key) => {
+  const m = /^([\w-]+\.html)(\?[^#]*)?(#.*)?$/.exec(href || '');
+  if (!m) return href;
+  return m[1] + (k === 'ccm' ? '' : '?s=' + k) + (m[3] || '');
+};
 const monthOf = i => +U[i][0].slice(0, 2);
 const inMonth = m => U.map((_, i) => i).filter(i => m === 'all' || monthOf(i) === +m);
 const count = (idx, f) => idx.filter(f).length;
@@ -116,14 +104,67 @@ function side(active) {
       <svg class="brand-mark" viewBox="0 0 32 32" role="img" aria-label="竞品观测标志"><use href="#mark"/></svg>
       <div class="brand-name">竞品观测</div>
     </div>
-    <div class="space" role="button" tabindex="0">
-      <div><small>观测空间</small>CCM 云文档</div>
-      <svg class="i"><use href="#i-chev"/></svg>
+    <div class="space-wrap">
+      <div class="space" role="button" tabindex="0" aria-haspopup="menu" aria-expanded="false" id="space-btn">
+        <div><small>观测空间</small>${esc(SP.name)}</div>
+        <svg class="i"><use href="#i-chev"/></svg>
+      </div>
+      <div class="space-menu" role="menu" id="space-menu" hidden>
+        ${SPACES.map(s => `<a role="menuitemradio" aria-checked="${s.key === SP.key}" href="${withSpace(active + '.html', s.key)}" data-space="${s.key}"${s.key === SP.key ? ' class="on"' : ''}>
+          <span class="av">${esc(s.av)}</span><span><b>${esc(s.name)}</b><small>${s.comps} 个${s.unit} · ${s.total} 条</small></span>${s.key === SP.key ? '<svg class="i"><use href="#i-check"/></svg>' : ''}</a>`).join('')}
+        <a href="${withSpace('config.html')}#space" class="space-menu-foot"><svg class="i"><use href="#i-gear"/></svg>管理观测空间</a>
+      </div>
     </div>
     <nav class="nav">
       ${NAV.map(([k, label, ico, href, n]) => `<a href="${href}"${k === active ? ' class="on" aria-current="page"' : ''}><svg class="i"><use href="#${ico}"/></svg>${label}${n ? `<span class="count num">${n}</span>` : ''}</a>`).join('')}
     </nav>
     <div class="side-foot"><span class="pulse"></span><div>数据截至 <b class="num">${D.NOW}</b><br>每条动态均附原始来源</div></div>`;
+
+  /* 空间切换菜单 */
+  const btn = el.querySelector('#space-btn'), menu = el.querySelector('#space-menu');
+  const open = v => { menu.hidden = !v; btn.setAttribute('aria-expanded', v); if (v) (menu.querySelector('a.on') || menu.querySelector('a')).focus(); };
+  btn.addEventListener('click', () => open(menu.hidden));
+  btn.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') { e.preventDefault(); open(true); } });
+  menu.addEventListener('keydown', e => {
+    const items = [...menu.querySelectorAll('a')], k = items.indexOf(document.activeElement);
+    if (e.key === 'Escape') { open(false); btn.focus(); }
+    if (e.key === 'ArrowDown') { e.preventDefault(); items[(k + 1) % items.length].focus(); }
+    if (e.key === 'ArrowUp') { e.preventDefault(); items[(k - 1 + items.length) % items.length].focus(); }
+  });
+  document.addEventListener('click', e => { if (!menu.hidden && !e.target.closest('.space-wrap')) open(false); });
+  menu.addEventListener('click', e => { const a = e.target.closest('[data-space]'); if (a) store.raw('space', a.dataset.space); });
+
+  /* 窄屏没有侧栏：顶部放一个下拉框切换空间 */
+  const main = document.querySelector('.main');
+  if (main && !main.querySelector('.m-space')) {
+    main.insertAdjacentHTML('afterbegin', `<label class="m-space">观测空间<select aria-label="切换观测空间">${SPACES.map(s => `<option value="${s.key}"${s.key === SP.key ? ' selected' : ''}>${esc(s.name)}</option>`).join('')}</select></label>`);
+    main.querySelector('.m-space select').addEventListener('change', e => { store.raw('space', e.target.value); location.href = withSpace(active + '.html', e.target.value); });
+  }
+
+  /* 顶栏面包屑里的空间名和说明 */
+  document.querySelectorAll('.crumb a[href="index.html"], .crumb > b').forEach(n => { if (n.textContent.trim() === 'CCM 云文档') n.textContent = SP.name; });
+  document.querySelectorAll('.crumb > span').forEach(n => { if (n.textContent.includes('在线文档、表格、幻灯片')) n.textContent = '· ' + SP.desc; });
+}
+
+/* 站内链接带上空间参数（本机存储不可用时也能保持在同一个空间） */
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[href]');
+  if (!a || a.target === '_blank' || a.hasAttribute('data-space')) return;
+  const href = a.getAttribute('href'), next = withSpace(href);
+  if (next !== href) a.setAttribute('href', next);
+}, true);
+
+/* 「AI 热门资讯」不是竞品分析：页面上的「竞品」改称「主体」（平台名「竞品观测」不改） */
+if (SP.unit !== '竞品') {
+  const swap = s => s.replace(/竞品月报/g, '资讯月报').replace(/竞品新动态/g, 'AI 新动态').replace(/竞品(?!观测)/g, SP.unit);
+  const fix = root => {
+    const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    for (let n = w.nextNode(); n; n = w.nextNode()) if (n.nodeValue.includes('竞品')) { const v = swap(n.nodeValue); if (v !== n.nodeValue) n.nodeValue = v; }
+    if (root.querySelectorAll) root.querySelectorAll('[aria-label*="竞品"],[placeholder*="竞品"],[title*="竞品"]').forEach(el => ['aria-label', 'placeholder', 'title'].forEach(a => { const v = el.getAttribute(a); if (v && v.includes('竞品')) el.setAttribute(a, swap(v)); }));
+  };
+  const run = () => { fix(document.body); new MutationObserver(ms => ms.forEach(m => { if (m.type === 'characterData') { if (m.target.nodeValue.includes('竞品')) m.target.nodeValue = swap(m.target.nodeValue); } else m.addedNodes.forEach(n => n.nodeType === 3 ? (n.nodeValue.includes('竞品') && (n.nodeValue = swap(n.nodeValue))) : n.nodeType === 1 && fix(n)); })).observe(document.body, { childList: true, subtree: true, characterData: true }); };
+  document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', run) : setTimeout(run);
+  document.title = swap(document.title);
 }
 
 
@@ -174,13 +215,16 @@ function busy(btn, text, ms, done) {
 }
 
 /* 本机记住的轻量偏好（读写失败时忽略） */
+/* 各空间分开存（CCM 沿用原来的键名，已保存的筛选和订阅不丢） */
+const NS = SP.key === 'ccm' ? 'cw:' : `cw:${SP.key}:`;
 const store = {
-  get(k, d) { try { const v = localStorage.getItem('cw:' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
-  set(k, v) { try { localStorage.setItem('cw:' + k, JSON.stringify(v)); } catch (e) {} },
+  get(k, d) { try { const v = localStorage.getItem(NS + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(NS + k, JSON.stringify(v)); } catch (e) {} },
+  raw(k, v) { try { localStorage.setItem('cw:' + k, v); } catch (e) {} },
 };
 
-/* 推送到飞书（各页通用，接收方为示意） */
-const GROUPS = [['CCM 产品组', 42], ['文档 AI 设计周会', 18], ['幻灯片小组', 12], ['国内竞品观察', 26]];
+/* 推送到飞书（各页通用，接收方为示意：取当前空间的订阅群） */
+const GROUPS = SP.SEED.filter(s => s.kind === 'group' && s.on).map(s => [s.name, s.size]);
 function pushDialog(what) {
   modal({
     title: '推送到飞书', sub: what, ok: '推送',
@@ -198,5 +242,11 @@ document.addEventListener('click', e => {
   if (seg) { seg.parentElement.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === seg)); }
 });
 
-window.CW = { D, P, ORDER, T, U, KIND, esc, md, monthOf, inMonth, count, kindHTML, dayHTML, logoHTML, tagHTML, itemHTML, feedHTML, side, toast, modal, val, checked, busy, store, pushDialog, GROUPS };
+/* 当前空间的订阅是否会收到某条动态（订阅页、解读页共用） */
+const subHits = (s, i) => (!s.ps.length || s.ps.includes(U[i][1])) && (!s.ts.length || s.ts.includes(U[i][2]));
+/* 数据源：某个竞品对应的来源名，以及当前处于故障状态的来源 */
+const srcOf = p => SP.SRC.filter(s => s[1] === p).map(s => s[0]);
+const FAILING = SP.SRC.find(s => s[3]);
+
+window.CW = { SP, SPACES, HEX: window.CW_HEX, withSpace, subHits, srcOf, FAILING, D, P, ORDER, T, U, KIND, esc, md, monthOf, inMonth, count, kindHTML, dayHTML, logoHTML, tagHTML, itemHTML, feedHTML, side, toast, modal, val, checked, busy, store, pushDialog, GROUPS };
 })();

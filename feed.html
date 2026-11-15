@@ -88,6 +88,9 @@
 </div>
 
 <script src="data.js"></script>
+<script src="data-b2b.js"></script>
+<script src="data-news.js"></script>
+<script src="spaces.js"></script>
 <script src="shell.js"></script>
 <script>
 const { D, P, ORDER, T, U, esc, md, kindHTML, tagHTML, logoHTML, toast, busy, modal, val, store } = CW;
@@ -153,7 +156,7 @@ function render() {
 
   let html = '';
   if (!idx.length) {
-    html = `<div class="empty"><b>没有符合条件的动态</b>${S.p === 'wps' || S.p === 'dd' ? `${P[S.p].name} 在所选范围内没有可核实的公开更新。` : '换个关键词，或者放宽筛选条件。'}<br><button class="btn" data-reset>清空筛选</button></div>`;
+    html = `<div class="empty"><b>没有符合条件的动态</b>${S.p && !S.q ? `${P[S.p].name} 在所选范围内没有可核实的公开更新。` : '换个关键词，或者放宽筛选条件。'}<br><button class="btn" data-reset>清空筛选</button></div>`;
   } else if (S.sort === 'comp') {
     for (const p of ORDER) { const g = idx.filter(i => U[i][1] === p); if (!g.length) continue;
       html += `<div class="day"><b>${P[p].name}</b><span class="num">${g.length} 条</span></div>` + g.map(item).join(''); }
@@ -183,13 +186,10 @@ function render() {
 }
 
 /* ---------- 保存的筛选（本机） ---------- */
-const PRESET = [
-  { name: '国内竞品', desc: '腾讯、钉钉、WPS', f: { q: '', m: 'all', k: '', p: '', t: '', ps: ['tx', 'dd', 'wps'] } },
-  { name: '幻灯片相关', desc: '标题或摘要含「演示」「幻灯片」「PowerPoint」「Slides」', f: { q: '', m: 'all', k: '', p: '', t: '', kw: ['演示', '幻灯片', 'PowerPoint', 'Slides', 'PPT'] } },
-  { name: '只看官方日志', desc: '', f: { q: '', m: 'all', k: 'off', p: '', t: '' } },
-];
+/* 预设筛选来自当前空间（spaces.js），缺省字段补成「全部」 */
+const PRESET = CW.SP.PRESET.map(s => ({ ...s, f: { q: '', m: 'all', k: '', p: '', t: '', ...s.f } }));
 let saved = store.get('feed-saved', []);
-const presetMatch = (i, f) => (!f.ps || f.ps.includes(U[i][1])) && (!f.kw || f.kw.some(w => (U[i][4] + U[i][5]).includes(w))) && match(i, f);
+const presetMatch = (i, f) => (!f.ps || f.ps.includes(U[i][1])) && (!f.ts || f.ts.includes(U[i][2])) && (!f.kw || f.kw.some(w => (U[i][4] + U[i][5]).includes(w))) && match(i, f);
 function renderSaved() {
   const all = [...PRESET, ...saved];
   document.getElementById('saved').innerHTML = all.map((s, n) => `
@@ -220,7 +220,7 @@ document.getElementById('saved').addEventListener('click', e => {
   document.querySelectorAll('#f-m button').forEach(x => x.classList.toggle('on', x.dataset.v === String(S.m)));
   document.querySelectorAll('#f-k button').forEach(x => x.classList.toggle('on', x.dataset.v === S.k));
   render();
-  if (s.f.ps || s.f.kw) { // 预设里的多竞品 / 关键词条件，单独渲染
+  if (s.f.ps || s.f.kw || s.f.ts) { // 预设里的多竞品 / 关键词条件，单独渲染
     const idx = ALL.filter(i => presetMatch(i, s.f));
     document.getElementById('feed').innerHTML = idx.length ? idx.map(item).join('') : '<div class="empty"><b>没有符合条件的动态</b></div>';
     document.getElementById('result').innerHTML = `共 <b class="num">${idx.length}</b> 条 · 保存的筛选「${esc(s.name)}」`;
@@ -249,7 +249,7 @@ document.getElementById('btn-export').onclick = () => {
       <p class="note">导出内容包含日期、竞品、主题、来源类型、标题、摘要和原文链接。</p>`,
     onOk(f) { toast(`已生成${f.querySelector('[name=fmt]:checked').value}，共 ${idx.length} 条`); } });
 };
-document.getElementById('btn-crawl').onclick = e => busy(e.currentTarget, '抓取中…', 1600, () => toast('抓取完成：12 个来源都没有新动态'));
+document.getElementById('btn-crawl').onclick = e => busy(e.currentTarget, '抓取中…', 1600, () => toast(`抓取完成：${CW.SP.SRC.length} 个来源都没有新动态`));
 
 /* 从其他页带筛选进来：feed.html#p-google、#t-inline、#m10 */
 const h = location.hash.slice(1);

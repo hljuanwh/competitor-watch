@@ -88,26 +88,23 @@
 </div>
 
 <script src="data.js"></script>
+<script src="data-b2b.js"></script>
+<script src="data-news.js"></script>
+<script src="spaces.js"></script>
 <script src="shell.js"></script>
 <script>
-const { D, P, ORDER, T, U, esc, inMonth, logoHTML, tagHTML, modal, val, checked, toast, store } = CW;
+const { SP, subHits, D, P, ORDER, T, U, esc, inMonth, logoHTML, tagHTML, modal, val, checked, toast, store } = CW;
 CW.side('subscribe');
 
 const K = { rt: ['实时动态', 'blue', '有新动态时'], daily: ['每日汇总', '', '每天 10:00'], mon: ['月报', 'sig', '每月最后一天 18:00'], year: ['年报', 'sig', '12 月 31 日 18:00'] };
-const SEED = [
-  { id: 's1', av: '产', name: 'CCM 产品组', kind: 'group', size: 42, k: ['rt', 'mon'], ps: [], ts: [], on: true },
-  { id: 's2', av: '设', name: '文档 AI 设计周会', kind: 'group', size: 18, k: ['mon'], ps: [], ts: [], on: true },
-  { id: 's3', av: '幻', name: '幻灯片小组', kind: 'group', size: 12, k: ['rt'], ps: ['ms', 'google', 'gpt'], ts: ['deck', 'inline'], on: true },
-  { id: 's4', av: '国', name: '国内竞品观察', kind: 'group', size: 26, k: ['daily', 'mon'], ps: ['tx', 'dd', 'wps'], ts: [], on: true },
-  { id: 's5', av: '我', name: '我', kind: 'person', size: 1, k: ['year'], ps: [], ts: [], on: true },
-  { id: 's6', av: '周', name: '周会归档群', kind: 'group', size: 9, k: ['mon'], ps: [], ts: [], on: false, pausedAt: '08-31 18:00' },
-];
+const SEED = SP.SEED; /* 每个空间一套示意订阅，见 spaces.js */
 let SUBS = store.get('subs', null) || SEED.map(s => ({ ...s }));
 const save = () => store.set('subs', SUBS);
 let filterKind = '', selected = 's3';
+if (!SUBS.some(s => s.id === selected)) selected = SUBS[0] && SUBS[0].id;
 
 /* 订阅命中的动态（按竞品和主题筛） */
-const hits = s => U.map((_, i) => i).filter(i => (!s.ps.length || s.ps.includes(U[i][1])) && (!s.ts.length || s.ts.includes(U[i][2])));
+const hits = s => U.map((_, i) => i).filter(i => subHits(s, i));
 function lastPush(s) {
   if (!s.on) return s.pausedAt ? `${s.pausedAt} · 已暂停` : '已暂停';
   const c = [];
@@ -160,24 +157,24 @@ function preview() {
     if (s.k.includes('daily')) {
       const day = h.filter(j => U[j][0] === d);
       time.textContent = `${d} 10:00`;
-      msg.innerHTML = `<div class="msg-head">每日汇总 · ${+d.slice(0, 2)} 月 ${+d.slice(3)} 日<span>CCM 云文档</span></div>
+      msg.innerHTML = `<div class="msg-head">每日汇总 · ${+d.slice(0, 2)} 月 ${+d.slice(3)} 日<span>${esc(SP.name)}</span></div>
         <div class="msg-body"><h4>今天有 ${day.length} 条新动态</h4><ol>${day.map(j => `<li>${P[U[j][1]].name}：${esc(U[j][4])}</li>`).join('')}</ol></div>
         <div class="msg-foot"><span class="pri">查看动态</span><span>原文</span></div>`;
     } else {
       time.textContent = `${d} 09:10`;
-      msg.innerHTML = `<div class="msg-head">竞品新动态<span>CCM 云文档</span></div>
+      msg.innerHTML = `<div class="msg-head">竞品新动态<span>${esc(SP.name)}</span></div>
         <div class="msg-body"><div class="meta"><span class="who">${P[p].name}</span>${tagHTML(t)}</div><h4>${esc(title)}</h4>${esc(body)}</div>
         <div class="msg-foot"><span class="pri">看解读</span><span>原文</span></div>`;
     }
   } else if (s.k.includes('mon')) {
     const R = D.REPORT[D.LATEST_FULL];
     time.textContent = '10-31 18:00';
-    msg.innerHTML = `<div class="msg-head">10 月竞品月报<span>CCM 云文档</span></div>
+    msg.innerHTML = `<div class="msg-head">10 月竞品月报<span>${esc(SP.name)}</span></div>
       <div class="msg-body"><h4>${R.h1.replace(/<[^>]+>/g, '')}</h4>${inMonth(10).length} 条新动态，比 9 月${inMonth(10).length >= inMonth(9).length ? '多' : '少'} ${Math.abs(inMonth(10).length - inMonth(9).length)} 条。</div>
       <div class="msg-foot"><span class="pri">阅读月报</span><span>全部动态</span></div>`;
   } else {
     time.textContent = '12-31 18:00';
-    msg.innerHTML = `<div class="msg-head">2026 年度报告<span>CCM 云文档</span></div>
+    msg.innerHTML = `<div class="msg-head">2026 年度报告<span>${esc(SP.name)}</span></div>
       <div class="msg-body"><h4>年报将在 12 月 31 日生成</h4>目前已收录 ${U.length} 条动态。</div>
       <div class="msg-foot"><span class="pri">查看年报进度</span></div>`;
   }
@@ -246,7 +243,7 @@ document.getElementById('subs').addEventListener('click', e => {
 document.getElementById('f-kind').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { filterKind = b.dataset.v; render(); } });
 document.getElementById('btn-new').onclick = () => editor();
 document.getElementById('add-row').onclick = () => editor();
-document.getElementById('btn-test').onclick = () => { const s = SUBS.find(x => x.id === selected); toast(`测试消息已发到「${s ? s.name : 'CCM 产品组'}」`); };
+document.getElementById('btn-test').onclick = () => { const s = SUBS.find(x => x.id === selected); toast(`测试消息已发到「${s ? s.name : SEED[0].name}」`); };
 
 render(); renderLog();
 if (location.hash === '#new') editor();
