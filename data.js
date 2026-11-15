@@ -90,7 +90,7 @@ const U = [
 const REPORT = {
   11: {
     partial: true,
-    h1: '11 月进行中，<mark>已收录 3 条</mark>',
+    h1: '11 月上半月，AI 做出的东西<mark>能直接拿走</mark>',
     lead: '截至 11 月 15 日：Google 把 Gemini 技能推到 Docs、Slides、Drive 等应用，Sheets 画布可以发布成独立的只读链接；Claude 任务里的文件可以直接下载，Markdown 预览能渲染 Mermaid 图。完整月报在 11 月 30 日 18:00 生成。',
     sum: {
       agent: 'Google 的 Gemini 技能在 Docs、Gmail、Slides、Drive、Chat 中上线，Sheets 和 Meet 暂不支持。',

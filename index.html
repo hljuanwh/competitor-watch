@@ -80,19 +80,22 @@ const { SP, D, P, ORDER, T, U, esc, inMonth, feedHTML, logoHTML, toast, busy, pu
 document.getElementById('src-note').textContent = SP.srcNote;
 CW.side('index');
 
-const M = D.LATEST_FULL, R = D.REPORT[M];
-const idx = inMonth(M), prev = inMonth(M - 1);
+/* 首页展示最新的月份（11 月，进行中）；和上个月比同期（1 日到今天），不拿半个月比整月 */
+const M = D.MONTHS[0], R = D.REPORT[M], LIVE = !!R.partial;
+const TODAY = +D.NOW.slice(8), LAST = new Date(2026, M, 0).getDate();
+const idx = inMonth(M), prevAll = inMonth(M - 1);
+const prev = LIVE ? prevAll.filter(i => +U[i][0].slice(3) <= TODAY) : prevAll;
 const off = idx.filter(i => U[i][3] === 'off').length;
 const delta = idx.length - prev.length;
 
 document.getElementById('h1').innerHTML = R.h1;
 document.getElementById('lead').textContent = R.lead;
-document.getElementById('chip').textContent = `${M} 月月报结论`;
-document.getElementById('hero-meta').textContent = `依据 ${idx.length} 条动态 · 2026-${M}-${new Date(2026, M, 0).getDate()} 生成`;
+document.getElementById('chip').textContent = LIVE ? `${M} 月进行中` : `${M} 月月报结论`;
+document.getElementById('hero-meta').textContent = LIVE ? `依据截至 ${M} 月 ${TODAY} 日的 ${idx.length} 条动态 · 完整月报 ${M}-${LAST} 18:00 生成` : `依据 ${idx.length} 条动态 · 2026-${M}-${LAST} 生成`;
 document.getElementById('kpis').innerHTML = `
   <div class="kpi"><div class="kpi-value num">${ORDER.length}</div><div class="kpi-label">关注竞品</div></div>
   <div class="kpi"><div class="kpi-value num">${U.length}</div><div class="kpi-label">累计收录 · 7 月起</div></div>
-  <div class="kpi"><div class="kpi-value num">${idx.length}<sup${delta < 0 ? ' class="down"' : ''}>${delta > 0 ? '+' : delta < 0 ? '−' : '±'}${Math.abs(delta)}</sup></div><div class="kpi-label">${M} 月新增 · 较 ${M - 1} 月 ${prev.length} 条</div></div>
+  <div class="kpi"><div class="kpi-value num">${idx.length}<sup${delta < 0 ? ' class="down"' : ''}>${delta > 0 ? '+' : delta < 0 ? '−' : '±'}${Math.abs(delta)}</sup></div><div class="kpi-label">${M} 月新增 · 较 ${M - 1} 月${LIVE ? '同期' : ''} ${prev.length} 条</div></div>
   <div class="kpi"><div class="kpi-value num">${off}</div><div class="kpi-label">${M} 月来自官方日志</div></div>`;
 
 /* 图例与主题计数：按当月条数排序 */
@@ -106,14 +109,17 @@ const SPAN = new Date(2026, M, 0).getDate(), START = new Date(2026, M - 1, 1);
 const pos = d => { const [m, day] = d.split('-').map(Number); return ((new Date(2026, m - 1, day) - START) / 864e5 + .5) / SPAN * 100; };
 const pad = n => String(n).padStart(2, '0');
 const weeks = [1, 8, 15, 22, 29].map(d => `${pad(M)}-${pad(d)}`);
+/* 进行中的月份：今天以后的部分淡化，并标出「今天」 */
+const restL = LIVE ? pos(`${pad(M)}-${pad(TODAY)}`) + .5 / SPAN * 100 : 100;
+const rest = LIVE ? `<div class="tl-rest" style="left:${restL}%"></div>` : '';
 const order = [...ORDER].sort((a, b) => idx.filter(i => U[i][1] === b).length - idx.filter(i => U[i][1] === a).length);
 let tl = `<div class="tl-axis"><div></div><div class="tl-track">
-  ${weeks.map(w => `<div class="tl-month" style="left:${pos(w) - .5 / SPAN * 100}%">${+w.slice(0, 2)}/${+w.slice(3)}</div>`).join('')}
+  ${weeks.map(w => `<div class="tl-month" style="left:${pos(w) - .5 / SPAN * 100}%">${+w.slice(0, 2)}/${+w.slice(3)}</div>`).join('')}${LIVE ? `<div class="tl-today" style="left:${restL}%">今天</div>` : ''}
 </div><div></div></div>`;
 for (const p of order) {
   const items = idx.filter(i => U[i][1] === p);
-  let dots = weeks.slice(1).map(w => `<div class="tl-grid" style="left:${pos(w) - .5 / SPAN * 100}%"></div>`).join('');
-  if (!items.length) dots += `<span class="tl-empty">${M} 月无收录</span>`;
+  let dots = rest + weeks.slice(1).map(w => `<div class="tl-grid" style="left:${pos(w) - .5 / SPAN * 100}%"></div>`).join('');
+  if (!items.length) dots += `<span class="tl-empty">${M} 月${LIVE ? '暂' : ''}无收录</span>`;
   const seen = {};
   for (const i of items) {
     const [d, , t, , title] = U[i];
@@ -149,12 +155,12 @@ document.getElementById('stack').innerHTML = `<span style="flex:${off};backgroun
 document.getElementById('src-list').innerHTML = `
   <div><i style="background:var(--ok)"></i>厂商官方更新日志<b class="num">${off}</b></div>
   <div><i style="background:#b9bccb"></i>媒体与发布会报道<b class="num">${idx.length - off}</b></div>`;
-const strip = h => h.replace(/<[^>]+>/g, '').replace(/^\d+ 月，/, '');
+const strip = h => h.replace(/<[^>]+>/g, '').replace(/^\d+ 月[^，]*，/, '');
 document.getElementById('reports').innerHTML = [M, M - 1].map(m => `
-  <a class="report-link" href="monthly.html#m${m}"><span><span class="serif">2026 年 ${m} 月月报</span><small>${inMonth(m).length} 条 · ${strip(D.REPORT[m].h1)}</small></span><svg class="i" style="color:var(--ink-3)"><use href="#i-right"/></svg></a>`).join('');
+  <a class="report-link" href="monthly.html#m${m}"><span><span class="serif">2026 年 ${m} 月月报${D.REPORT[m].partial ? '<span class="kind" style="margin-left:6px;vertical-align:1px">进行中</span>' : ''}</span><small>${inMonth(m).length} 条 · ${strip(D.REPORT[m].h1)}</small></span><svg class="i" style="color:var(--ink-3)"><use href="#i-right"/></svg></a>`).join('');
 
 /* ---------- 顶栏按钮 ---------- */
-document.getElementById('btn-push').onclick = () => pushDialog(`${M} 月月报 · ${strip(R.h1)}`);
+document.getElementById('btn-push').onclick = () => pushDialog(`${M} 月${LIVE ? '进展' : '月报'} · ${strip(R.h1)}`);
 document.getElementById('btn-crawl').onclick = e => busy(e.currentTarget, '抓取中…', 1600, () => toast(`抓取完成：${SP.SRC.length} 个来源都没有新动态`));
 </script>
 </body>

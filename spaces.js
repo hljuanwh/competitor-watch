@@ -203,6 +203,6 @@ try { localStorage.setItem('cw:space', key); } catch (e) {}
 
 const DATA = window.CW_SPACES || {};
 window.CW_SPACE = Object.assign({}, DATA[key], META[key]);
-window.CW_SPACE_LIST = KEYS.map(k => ({ key: k, av: META[k].av, name: META[k].name, desc: META[k].desc, unit: META[k].unit, comps: META[k].ORDER.length, total: (DATA[k] && DATA[k].U.length) || 0 }));
+window.CW_SPACE_LIST = KEYS.map(k => ({ key: k, av: META[k].av, name: META[k].name, desc: META[k].desc, unit: META[k].unit, comps: META[k].ORDER.length, srcs: META[k].SRC.length, total: (DATA[k] && DATA[k].U.length) || 0 }));
 window.CW_HEX = HEX;
 })();

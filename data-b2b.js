@@ -87,7 +87,7 @@ const U = [
 const REPORT = {
   11: {
     partial: true,
-    h1: '11 月进行中，<mark>已收录 5 条</mark>',
+    h1: '11 月上半月，管理员开始<mark>管预算、管敏感文件</mark>',
     lead: '截至 11 月 15 日：Claude 企业部署能按 Purview 敏感度标签拦截文件，网关管理员可以设支出上限和共享预算；豆包工作接入 Kimi、GLM、DeepSeek，并标出每个模型的额度倍率；Google 的 Gemini 技能在 Docs、Slides、Drive 等应用上线。完整月报在 11 月 30 日 18:00 生成。',
     sum: {
       govern: 'Claude 企业部署可按 Purview 标签拦截 OneDrive、SharePoint、Outlook 内容；ChatGPT Business 管理员能修改成员邮箱。',

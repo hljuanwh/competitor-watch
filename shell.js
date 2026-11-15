@@ -112,7 +112,7 @@ function side(active) {
       <div class="space-menu" role="menu" id="space-menu" hidden>
         ${SPACES.map(s => `<a role="menuitemradio" aria-checked="${s.key === SP.key}" href="${withSpace(active + '.html', s.key)}" data-space="${s.key}"${s.key === SP.key ? ' class="on"' : ''}>
           <span class="av">${esc(s.av)}</span><span><b>${esc(s.name)}</b><small>${s.comps} 个${s.unit} · ${s.total} 条</small></span>${s.key === SP.key ? '<svg class="i"><use href="#i-check"/></svg>' : ''}</a>`).join('')}
-        <a href="${withSpace('config.html')}#space" class="space-menu-foot"><svg class="i"><use href="#i-gear"/></svg>管理观测空间</a>
+        <a href="${withSpace('config.html')}#spaces-label" class="space-menu-foot"><svg class="i"><use href="#i-gear"/></svg>管理和新建空间</a>
       </div>
     </div>
     <nav class="nav">
@@ -157,12 +157,15 @@ document.addEventListener('click', e => {
 /* 「AI 热门资讯」不是竞品分析：页面上的「竞品」改称「主体」（平台名「竞品观测」不改） */
 if (SP.unit !== '竞品') {
   const swap = s => s.replace(/竞品月报/g, '资讯月报').replace(/竞品新动态/g, 'AI 新动态').replace(/竞品(?!观测)/g, SP.unit);
+  /* 别的空间的名片（空间菜单、配置页空间卡片）保留它们自己的叫法 */
+  const keep = n => { const el = n.nodeType === 1 ? n : n.parentElement; return !!(el && el.closest('[data-keep], .space-menu')); };
   const fix = root => {
+    if (keep(root)) return;
     const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-    for (let n = w.nextNode(); n; n = w.nextNode()) if (n.nodeValue.includes('竞品')) { const v = swap(n.nodeValue); if (v !== n.nodeValue) n.nodeValue = v; }
+    for (let n = w.nextNode(); n; n = w.nextNode()) if (n.nodeValue.includes('竞品') && !keep(n)) { const v = swap(n.nodeValue); if (v !== n.nodeValue) n.nodeValue = v; }
     if (root.querySelectorAll) root.querySelectorAll('[aria-label*="竞品"],[placeholder*="竞品"],[title*="竞品"]').forEach(el => ['aria-label', 'placeholder', 'title'].forEach(a => { const v = el.getAttribute(a); if (v && v.includes('竞品')) el.setAttribute(a, swap(v)); }));
   };
-  const run = () => { fix(document.body); new MutationObserver(ms => ms.forEach(m => { if (m.type === 'characterData') { if (m.target.nodeValue.includes('竞品')) m.target.nodeValue = swap(m.target.nodeValue); } else m.addedNodes.forEach(n => n.nodeType === 3 ? (n.nodeValue.includes('竞品') && (n.nodeValue = swap(n.nodeValue))) : n.nodeType === 1 && fix(n)); })).observe(document.body, { childList: true, subtree: true, characterData: true }); };
+  const run = () => { fix(document.body); new MutationObserver(ms => ms.forEach(m => { if (m.type === 'characterData') { if (m.target.nodeValue.includes('竞品') && !keep(m.target)) m.target.nodeValue = swap(m.target.nodeValue); } else m.addedNodes.forEach(n => n.nodeType === 3 ? (n.nodeValue.includes('竞品') && !keep(n) && (n.nodeValue = swap(n.nodeValue))) : n.nodeType === 1 && fix(n)); })).observe(document.body, { childList: true, subtree: true, characterData: true }); };
   document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', run) : setTimeout(run);
   document.title = swap(document.title);
 }

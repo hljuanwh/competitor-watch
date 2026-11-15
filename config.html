@@ -16,25 +16,26 @@
     <header class="top">
       <div class="crumb">观测空间 <svg class="i" style="width:12px;height:12px"><use href="#i-right"/></svg> <a href="index.html" id="crumb-name">CCM 云文档</a> <svg class="i" style="width:12px;height:12px"><use href="#i-right"/></svg> <b>配置</b><span>· 竞品、主题、来源和推送</span></div>
       <div class="actions">
-        <button class="btn" id="btn-copy"><svg class="i"><use href="#i-copy"/></svg>复制为新空间</button>
         <button class="btn primary" id="btn-save"><svg class="i"><use href="#i-check"/></svg>保存修改</button>
       </div>
     </header>
 
     <div class="content">
-      <section class="hero" aria-label="配置概况">
+      <section class="hero" aria-label="观测空间" style="grid-template-columns:1fr;padding-bottom:0">
         <div>
-          <h1>换一套竞品，就是另一个团队的平台</h1>
-          <p>平台的竞品、主题分类、来源、推送渠道和 AI 写作规则都在这里改。复制一份空间，换成自己的竞品和订阅人，就能给别的团队用。</p>
-          <div class="hero-meta"><span class="chip" id="n-spaces-chip">3 个观测空间</span>每个空间的竞品、主题和订阅互不影响</div>
-        </div>
-        <div class="kpis">
-          <div class="kpi"><div class="kpi-value num" id="k-spaces">3</div><div class="kpi-label">观测空间</div></div>
-          <div class="kpi"><div class="kpi-value num" id="k-comp">8</div><div class="kpi-label">本空间竞品</div></div>
-          <div class="kpi"><div class="kpi-value num" id="k-topic">6</div><div class="kpi-label">主题分类</div></div>
-          <div class="kpi"><div class="kpi-value num" id="k-src">12</div><div class="kpi-label">数据源<span class="demo">示意</span></div></div>
+          <h1>换一套关注对象，就是另一个团队的平台</h1>
+          <p>每个团队一个观测空间，各自的追踪对象、主题、来源、订阅和 AI 写作规则互不影响。新建空间时可以从现有空间复制一套设置，再换成自己的对象和订阅人。</p>
         </div>
       </section>
+
+      <p class="section-label" id="spaces-label">全部观测空间</p>
+      <div class="space-grid" id="spaces"></div>
+
+      <div class="scope-head" id="scope">
+        <span class="av" id="scope-av">C</span>
+        <h2><span id="scope-name">CCM 云文档</span> 的配置<small>下面的设置只影响这个空间。要配置别的空间，点上面的卡片切换过去。</small></h2>
+        <div class="scope-stats"><span><b class="num" id="k-comp">8</b><span id="k-unit">竞品</span></span><span><b class="num" id="k-topic">6</b>主题</span><span><b class="num" id="k-src">12</b>数据源<span class="demo">示意</span></span></div>
+      </div>
 
       <div class="split">
         <nav class="panel subnav" aria-label="配置分区">
@@ -51,9 +52,6 @@
             <div class="form">
               <div class="form-row"><label class="lbl" for="f-name">空间名称</label><input class="input" id="f-name" value="CCM 云文档"></div>
               <div class="form-row"><label class="lbl" for="f-desc">一句话说明<small>显示在顶栏面包屑后</small></label><input class="input" id="f-desc" value="在线文档、表格、幻灯片与文档内 AI"></div>
-              <div class="form-row top"><span class="lbl">全部空间<small>点一下切换过去</small></span>
-                <div id="spaces"></div>
-              </div>
             </div>
           </section>
 
@@ -137,17 +135,30 @@ document.getElementById('f-title').value = `${SP.unit === '竞品' ? '竞品新�
 document.getElementById('k-src').textContent = SP.SRC.length;
 CW.side('config');
 
-/* 全部空间：当前空间排第一，其余可点过去；「复制为新空间」新建的只在本页演示 */
-const SPACES = [...LIST.filter(s => s.key === SP.key), ...LIST.filter(s => s.key !== SP.key)].map(s => [s.av, s.name, `${s.comps} 个${s.unit} · 累计 ${s.total} 条`, s.key]);
-const renderSpaces = () => {
-  document.getElementById('spaces').innerHTML = SPACES.map(([a, n, s, k], i) => {
-    const inner = `<span class="av">${esc(a)}</span><span><b style="font-weight:500;color:var(--ink)">${esc(n)}</b>${i ? '' : ' <span class="kind off" style="margin-left:4px">当前</span>'}<small style="display:block;font-size:12px;color:var(--ink-3)">${esc(s)}</small></span>`;
-    return k && i ? `<a class="space-card" href="${withSpace('config.html', k)}" data-space="${k}">${inner}<svg class="i" style="color:var(--ink-3)"><use href="#i-right"/></svg></a>`
-      : `<div class="space-card">${inner}${k ? '' : '<span class="demo">示意</span>'}</div>`; }).join('');
-  document.getElementById('k-spaces').textContent = SPACES.length;
-  document.getElementById('n-spaces-chip').textContent = `${SPACES.length} 个观测空间`;
+/* 全部观测空间（平台级）：固定顺序，当前空间高亮；新建的空间只在本页演示 */
+const SPACES = LIST.map(x => ({ ...x }));
+document.getElementById('scope-av').textContent = SP.av;
+document.getElementById('scope-name').textContent = SP.name;
+document.getElementById('k-unit').textContent = SP.unit;
+const tile = x => {
+  const cur = x.key === SP.key;
+  const body = `<div class="space-tile-head"><span class="av">${esc(x.av)}</span><b>${esc(x.name)}</b>${cur ? '<span class="kind off">当前</span>' : x.key ? '' : '<span class="demo">示意</span>'}</div>
+    <p>${esc(x.desc || '')}</p>
+    <div class="space-tile-stats"><span><b class="num">${x.comps}</b>${esc(x.unit)}</span><span><b class="num">${x.total}</b>条动态</span><span><b class="num">${x.srcs}</b>来源</span></div>
+    <div class="space-tile-foot">${cur ? '<span>正在配置</span><a class="link" href="#scope">看设置</a>' : x.key ? `<span>${x.total ? '7 月起收录' : ''}</span><span class="go">切换过去<svg class="i" style="width:14px;height:14px"><use href="#i-right"/></svg></span>` : '<span>等待首次抓取 · 明天 09:00</span>'}</div>`;
+  return cur || !x.key ? `<div class="space-tile${cur ? ' on' : ''}" role="listitem" data-keep>${body}</div>` : `<a class="space-tile" role="listitem" href="${withSpace('config.html', x.key)}" data-space="${x.key}" data-keep>${body}</a>`;
 };
-document.getElementById('spaces').addEventListener('click', e => { const a = e.target.closest('[data-space]'); if (a) CW.store.raw('space', a.dataset.space); });
+const renderSpaces = () => {
+  document.getElementById('spaces').innerHTML = SPACES.map(tile).join('') +
+    `<button type="button" class="space-tile new" id="btn-new-space"><span class="plus"><svg class="i"><use href="#i-plus"/></svg></span><b>新建观测空间</b><small>给另一个团队用<br>可以从现有空间复制设置</small></button>`;
+  document.getElementById('spaces-label').textContent = `全部观测空间 · ${SPACES.length} 个`;
+};
+renderSpaces();
+document.getElementById('spaces').setAttribute('role', 'list');
+document.getElementById('spaces').addEventListener('click', e => {
+  const a = e.target.closest('[data-space]'); if (a) CW.store.raw('space', a.dataset.space);
+  if (e.target.closest('#btn-new-space')) newSpace();
+});
 renderSpaces();
 
 /* 来源：该竞品的官方来源；有媒体条目的再加「新闻检索」 */
@@ -218,22 +229,39 @@ saveBtn.onclick = () => {
   const name = document.getElementById('f-name').value.trim();
   if (!name) { toast('空间名称不能为空', 'warn'); document.getElementById('f-name').focus(); return; }
   busy(saveBtn, '保存中…', 700, () => {
-    document.getElementById('crumb-name').textContent = name; SPACES[0][1] = name; renderSpaces();
+    document.getElementById('crumb-name').textContent = name; document.getElementById('scope-name').textContent = name;
+    const me = SPACES.find(x => x.key === SP.key); me.name = name; me.desc = document.getElementById('f-desc').value.trim(); renderSpaces();
     saveBtn.innerHTML = '<svg class="i"><use href="#i-check"/></svg>保存修改';
     toast('已保存，下次抓取和推送按新配置执行');
   });
 };
-document.getElementById('btn-copy').onclick = () => modal({
-  title: '复制为新空间', sub: '复制当前的主题分类、来源写法、推送规则和 AI 写作规则；竞品和订阅人可以在新空间里换掉', ok: '复制',
-  body: `<div class="field"><label for="cp-name">新空间名称</label><input class="input" id="cp-name" name="name" placeholder="例如：飞书多维表格" maxlength="20"></div>
-    <div class="field"><span class="lbl">一起复制</span><div class="pills">
-      <label class="pill"><input type="checkbox" name="w" value="c" checked>竞品与来源</label>
+function newSpace() { const m = modal({
+  title: '新建观测空间', sub: '给另一个团队用：先复制一套现成的设置，再换成自己的追踪对象和订阅人', ok: '创建', wide: true,
+  body: `<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="field"><label for="ns-name">空间名称</label><input class="input" id="ns-name" name="name" placeholder="例如：飞书多维表格" maxlength="20"></div>
+      <div class="field"><label for="ns-desc">一句话说明</label><input class="input" id="ns-desc" name="desc" placeholder="显示在顶栏面包屑后" maxlength="30"></div></div>
+    <div class="field"><span class="lbl">从哪里开始</span><div class="pills">
+      ${SPACES.filter(x => x.key).map(x => `<label class="pill"><input type="radio" name="from" value="${x.key}"${x.key === SP.key ? ' checked' : ''}>复制「${esc(x.name)}」</label>`).join('')}
+      <label class="pill"><input type="radio" name="from" value="">空白空间</label></div></div>
+    <div class="field" id="ns-what"><span class="lbl">一起复制</span><div class="pills">
+      <label class="pill"><input type="checkbox" name="w" value="c" checked>追踪对象与来源</label>
       <label class="pill"><input type="checkbox" name="w" value="t" checked>主题分类</label>
       <label class="pill"><input type="checkbox" name="w" value="a" checked>AI 写作规则</label>
-      <label class="pill"><input type="checkbox" name="w" value="s">订阅</label></div></div>`,
-  onOk(f, err) { const n = val(f, 'name'); if (!n) { err('填写新空间名称'); return false; }
-    SPACES.push([n.slice(0, 1), n, `从 ${SPACES[0][1]} 复制 · ${COMP.length} 个${SP.unit}`, '']); renderSpaces(); toast(`已创建空间「${n}」`); },
+      <label class="pill"><input type="checkbox" name="w" value="s">订阅</label></div></div>
+    <p class="note" style="margin:0">新空间从明天 09:00 的抓取开始收录；之前的动态不会复制过去。</p>`,
+  onOk(f, err) {
+    const n = val(f, 'name'); if (!n) { err('填写空间名称'); return false; }
+    if (SPACES.some(x => x.name === n)) { err('已经有同名的空间'); return false; }
+    const from = SPACES.find(x => x.key === f.querySelector('[name=from]:checked').value);
+    const w = [...f.querySelectorAll('[name=w]:checked')].map(x => x.value);
+    const copyC = from && w.includes('c');
+    SPACES.push({ key: '', av: n.slice(0, 1), name: n, desc: val(f, 'desc') || (from ? `从「${from.name}」复制` : '空白空间'), unit: from ? from.unit : '竞品', comps: copyC ? from.comps : 0, total: 0, srcs: copyC ? from.srcs : 0 });
+    renderSpaces(); toast(`已创建「${n}」，明天 09:00 开始抓取`);
+  },
 });
+  const what = m.form.querySelector('#ns-what');
+  m.form.addEventListener('change', () => { what.hidden = !m.form.querySelector('[name=from]:checked').value; });
+}
 document.getElementById('btn-hook').onclick = e => busy(e.currentTarget, '发送中', 900, () => toast('测试消息已发到机器人所在的群'));
 
 renderComp(); renderTopics();

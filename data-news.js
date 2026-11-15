@@ -65,10 +65,10 @@ const U = [
 const REPORT = {
   11: {
     partial: true,
-    h1: '11 月进行中，<mark>已收录 5 条</mark>',
-    lead: '截至 11 月 15 日：Anthropic 发布 Fable 5.2 和 Mythos 5.2；Google 公布 10 月发布的 Gemini 4 Argon，又推出专做打分判断的 Gemini Decisions API；豆包工作接入 Kimi、GLM、DeepSeek；英伟达 CEO 黄仁勋辞职。完整月报在 11 月 30 日 18:00 生成。',
+    h1: '11 月上半月，新模型<mark>更快、更省</mark>',
+    lead: '截至 11 月 15 日：Anthropic 发布 Fable 5.2 和 Mythos 5.2，速度比 5.1 快最多 30%；Google 推出专做打分判断的 Gemini Decisions API，输出不收费；豆包工作接入 Kimi、GLM、DeepSeek，并下调两款模型的额度倍率。另外，Google 汇总了 10 月发布的 Gemini 4 Argon，英伟达 CEO 黄仁勋辞职。完整月报在 11 月 30 日 18:00 生成。',
     sum: {
-      model:   'Anthropic 发布 Fable 5.2 和 Mythos 5.2，价格下调、速度更快；Google 汇总了 10 月发布的 Gemini 4 Argon 和随后公布的 Carbon。',
+      model:   'Anthropic 发布 Fable 5.2 和 Mythos 5.2，速度比 5.1 快最多 30%；Google 汇总了 10 月发布的 Gemini 4 Argon 和随后公布的 Carbon。',
       product: 'Google 推出 Gemini Decisions API，输出免费。',
       feature: '豆包工作接入 Kimi、GLM、DeepSeek 等第三方模型，并标出额度倍率。',
       event:   '英伟达 CEO 黄仁勋辞职，CFO 暂代。',
