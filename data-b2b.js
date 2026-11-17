@@ -1,5 +1,5 @@
 /* ===== 观测空间 · B 端 AI 办公 · 收录数据 =====
-   口径：2026-07-01 起收录，截至 2026-11-15。全部是公开信息，每条附来源链接；2026-11-15 检索并读过原文或报道正文。
+   口径：2026-07-01 起收录，截至 2026-11-17。全部是公开信息，每条附来源链接；2026-11-15 检索并读过原文或报道正文。
    「官方」= 厂商自己的博客、新闻稿或更新日志；「媒体」= 新闻报道、转载，或发布说明的第三方索引（官方页面无法直接读取时使用）。
    和「CCM 云文档」空间重叠的条目（Notion、Google、微软等）沿用那边已核实的文字和来源。
    没检索到可核实发布的月份如实留空：钉钉 9 月以外、Slack 9 月以外、企业微信 8 月（报道页无法打开，未收）。 */
@@ -19,11 +19,14 @@ const WWB = ['科技日报', 'https://www.stdaily.com/web/gdxw/2026-10/14/conten
 
 /* [日期, 产品, 主题, 来源类型, 标题, 摘要, [来源名, 链接]]，按日期倒序 */
 const U = [
-  /* ---------- 11 月（截至 11-15） ---------- */
+  /* ---------- 11 月（截至 11-17） ---------- */
+  ['11-16','google','agent','off','Gemini 技能可以分享，还能带上 Drive 和 Notebook 文件','在 Gemini 网页版的技能页按查看或编辑权限分享技能，接收方确认后安装；创建技能时可加入 Drive、Gemini Notebook、Google Photos 里的文件，Drive 文件实时同步；管理员可在管理控制台关闭分享。',gw('2026/11/share-skills-add-files-from-Drive-Notebook-Photos-to-skills-Gemini-app.html')],
+  ['11-16','google','connect','off','Apps Script 里的 Gemini 正式可用：一句话写脚本、一键修报错','描述需求即可生成脚本，改动逐块确认；「修复错误」会解释运行时报错并给出修法；面向 Business、Enterprise 的 Standard 和 Plus 版及 Google AI Pro、Ultra，11 月 12 日起陆续上线。',gw('2026/11/customize-and-extend-workspace-with-apps-script.html')],
   ['11-12','claude','govern','off','Claude 企业部署可按 Purview 敏感度标签拦截文件','管理员设置后，带 Microsoft Purview 标签的 OneDrive、SharePoint、Outlook 内容会被拦截；联网搜索和网页读取也能设为「每次询问」或「禁止」，用户不能自行放宽。',CLG],
   ['11-12','feishu','price','media','豆包工作接入 Kimi、GLM、DeepSeek，选模型时标出额度倍率','与飞书共用账号的豆包工作新增 Kimi 3.1 Pro、GLM 5.3、DeepSeek V4.1 Flash 等第三方模型，此前已先向企业客户开放；选择页标出每个模型的额度消耗倍率，并有限时优惠。',['新浪科技 · 爱范儿','https://finance.sina.com.cn/tech/roll/2026-11-12/doc-iniynaxi3809511.shtml']],
   ['11-12','chatgpt','govern','media','ChatGPT Business 管理员可以修改成员邮箱','全局管理员可以为符合条件的非 SCIM 用户更改邮箱，受域名和频率限制。',RLS],
   ['11-09','google','agent','off','Gemini 技能在 Docs、Slides、Drive 等应用上线','可复用的自定义指令在 Workspace Studio、Docs、Gmail、Slides、Drive、Chat 中上线，Sheets 和 Meet 暂不支持；仅限 18 岁以上用户。',gw('2026/11/skills-in-workspace.html')],
+  ['11-09','dingtalk','entry','media','千问办公 2.0：多人和 Agent 在同一个协作空间干活','协作空间可关联多个钉钉群聊、文档、AI 表格和 AI 听记，可以给数字员工派任务；新增自动任务，按指定人消息、群内 @ 或审批事件触发；全部功能已在千问办公客户端全量上线。',['科技日报','https://www.stdaily.com/web/gdxw/2026-11/09/content_610951.html']],
   ['11-05','claude','price','off','Claude 网关管理员可设支出上限和共享预算','新增「Apps gateway admin」菜单，用来设置支出上限、共享预算并导出花费；设置页的用量卡片显示网关上报的额度。',CLG],
 
   /* ---------- 10 月 ---------- */
@@ -77,6 +80,7 @@ const U = [
   ['08-07','notion','agent','off','Notion 可从分享菜单直接把文档交给自定义 Agent','在分享菜单里就能把文档或数据库共享给自定义 Agent，不必再进 Agent 的设置页。',NTN('08-07')],
 
   /* ---------- 7 月 ---------- */
+  ['07-27','wecom','entry','media','企业微信 AI 助理「大圆」开启内测','在企业微信任意界面左滑，或点电脑端侧边栏「智能助理」即可唤起；能汇总聊天和文档写周报、提炼群聊要点生成待办，调用智能文档、表格、会议、日程等能力，还能根据和微信客户的聊天分析客户需求。',['36氪','https://www.36kr.com/p/3916363882387074']],
   ['07-23','feishu','agent','media','飞书 aily 升级：主动跟进工作，多个智能体分工协作','在授权范围内基于消息、文档、日历、会议、任务和多维表格主动跟进；团队可以共享智能体、拉进项目群；「智能体队长」拆分任务交给不同 Agent 再汇总；管理员能看到每个智能体的来源、负责人和使用情况。',['新华网','https://www.news.cn/tech/20260723/5a84c09560134a5c9937a825773fba95/c.html']],
   ['07-18','wecom','agent','media','腾讯 WorkBuddy 推出独立 App，可导入腾讯文档作资料','iOS、安卓、鸿蒙同步上线，支持连接电脑和云端工作两种模式；通过资料库连接腾讯文档与 ima 知识库。',['DoNews · WAIC 2026 报道','https://www.donews.com/news/detail/1/6645946.html']],
   ['07-09','chatgpt','agent','media','ChatGPT Work 上线：交代目标，Agent 产出文档、表格和演示','连接应用和文件后，Agent 分步完成多步骤项目，可产出文档、表格、演示、网页和报告；先向 Pro、Enterprise、Edu 开放。',['JustAINews','https://justainews.com/companies/chatgpt-work-brings-ai-agents-into-everyday-office-tasks/']],
@@ -87,12 +91,14 @@ const U = [
 const REPORT = {
   11: {
     partial: true,
-    h1: '11 月上半月，管理员开始<mark>管预算、管敏感文件</mark>',
-    lead: '截至 11 月 15 日：Claude 企业部署能按 Purview 敏感度标签拦截文件，网关管理员可以设支出上限和共享预算；豆包工作接入 Kimi、GLM、DeepSeek，并标出每个模型的额度倍率；Google 的 Gemini 技能在 Docs、Slides、Drive 等应用上线。完整月报在 11 月 30 日 18:00 生成。',
+    h1: '11 月至今，管理员开始<mark>管预算、管敏感文件</mark>',
+    lead: '截至 11 月 17 日：Claude 企业部署能按 Purview 敏感度标签拦截文件，网关管理员可以设支出上限和共享预算；豆包工作接入 Kimi、GLM、DeepSeek，并标出每个模型的额度倍率。Agent 这边，千问办公 2.0 让多人和 Agent 在同一个协作空间干活，Google 的 Gemini 技能上线各应用、还能分享给同事。完整月报在 11 月 30 日 18:00 生成。',
     sum: {
       govern: 'Claude 企业部署可按 Purview 标签拦截 OneDrive、SharePoint、Outlook 内容；ChatGPT Business 管理员能修改成员邮箱。',
       price:  '豆包工作接入第三方模型并标出额度倍率；Claude 网关管理员可以设支出上限、共享预算并导出花费。',
-      agent:  'Google 的 Gemini 技能在 Docs、Gmail、Slides、Drive、Chat 中上线。',
+      agent:  'Google 的 Gemini 技能在 Docs、Gmail、Slides、Drive、Chat 中上线，并能带上 Drive 文件分享给同事。',
+      entry:  '千问办公 2.0 推出协作空间，关联钉钉群、文档和 AI 表格，多人和 Agent 一起干活。',
+      connect: 'Apps Script 里的 Gemini 正式可用，一句话写脚本、一键修报错。',
     },
   },
   10: {
@@ -132,12 +138,13 @@ const REPORT = {
   },
   7: {
     h1: '7 月，AI 从助手<mark>变成同事</mark>',
-    lead: '7 月只收了 4 条，方向一致：飞书 aily 升级为能主动跟进工作、多个智能体分工协作的「AI 同事」；Notion 让 Claude、Cursor 在团队看板上领任务；ChatGPT Work 交代目标就能产出文档、表格和演示；腾讯 WorkBuddy 推出独立 App。',
+    lead: '7 月收了 5 条，方向一致：飞书 aily 升级为能主动跟进工作、多个智能体分工协作的「AI 同事」；Notion 让 Claude、Cursor 在团队看板上领任务；ChatGPT Work 交代目标就能产出文档、表格和演示；腾讯 WorkBuddy 推出独立 App，企业微信的 AI 助理「大圆」开启内测。',
     sum: {
       agent: '飞书 aily 主动跟进工作、由「智能体队长」分派任务；Notion 让外部 Agent 在看板领任务；ChatGPT Work 分步完成多步骤项目；腾讯 WorkBuddy 推出独立 App。',
+      entry: '企业微信 AI 助理「大圆」开启内测，在任意界面左滑即可唤起。',
     },
   },
 };
 
-return { NOW: '2026-11-15', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
+return { NOW: '2026-11-17', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
 })();

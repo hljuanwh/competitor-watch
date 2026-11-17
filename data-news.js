@@ -1,5 +1,5 @@
 /* ===== 观测空间 · AI 热门资讯 · 收录数据 =====
-   口径：2026-07-01 起收录，截至 2026-11-15。全部是公开信息，每条附来源链接；2026-11-15 检索并读过原文或报道正文。
+   口径：2026-07-01 起收录，截至 2026-11-17。全部是公开信息，每条附来源链接；2026-11-15 检索并读过原文或报道正文。
    范围：模型发布、新产品、新功能、新趋势、资本动向、监管与行业事件，重点是前三类和趋势。
    「官方」= 公司自己的博客或新闻稿；「媒体」= 新闻报道、周报或第三方索引。
    周报类来源（Tech Startups、Digital Applied、AI Funding）只用于它们明确写出日期和主体的条目。
@@ -13,10 +13,14 @@ const FS8 = ['科技日报', 'https://www.stdaily.com/web/gdxw/2026-09/16/conten
 
 /* [日期, 主体, 主题, 来源类型, 标题, 摘要, [来源名, 链接]]，按日期倒序 */
 const U = [
-  /* ---------- 11 月（截至 11-15） ---------- */
+  /* ---------- 11 月（截至 11-17） ---------- */
+  ['11-15','other','model','media','美团开源 LongCat-2.5：1.6 万亿参数的 Agent 模型','混合专家架构，每个 token 激活约 480 亿参数；权重以 MIT 许可开放，可商用；报道称完全在国产硬件上训练，示例部署用的是华为昇腾。',['The Decoder','https://the-decoder.com/meituan-releases-a-1-6-trillion-parameter-agent-model-that-never-touched-an-nvidia-gpu/']],
+  ['11-13','other','trend','media','Sierra 发布个人 Agent 协议 Poppy 1.0，Shopify 全站启用','企业用这个协议告诉来访的 Agent 它在替谁办事、可以做什么；Shopify 为平台上所有店铺开启，Meta Muse 访问网站时会先找 Poppy；100 多家公司参与设计，规范仍标为草案。',['The Next Web','https://thenextweb.com/news/sierra-poppy-1-0-shopify-meta-muse-personal-agents']],
   ['11-12','other','event','media','英伟达 CEO 黄仁勋辞职，CFO 暂代','TechCrunch 报道，黄仁勋承认与一名被指为中国间谍的人有婚外关系后辞职，英伟达任命 CFO Colette Kress 为临时 CEO；报道认为英伟达对开源 AI 的支持存在变数，约 130 亿美元收购 Hugging Face 一事尚未完成。',['TechCrunch','https://techcrunch.com/2026/11/12/jensen-huangs-exit-puts-nvidias-support-for-open-source-in-question']],
   ['11-12','byte','feature','media','豆包工作接入 Kimi、GLM、DeepSeek 等第三方模型','新增 Kimi 3.1 Pro、GLM 5.3、DeepSeek V4.1 Flash 等模型，此前已先向企业客户开放；选择页标出各模型的额度消耗倍率，豆包 2.1 Lite 和 DeepSeek V4.1 Flash 的倍率下调。',['新浪科技 · 爱范儿','https://finance.sina.com.cn/tech/roll/2026-11-12/doc-iniynaxi3809511.shtml']],
   ['11-11','google','product','off','Google 推出 Gemini Decisions API，专做打分和判断','由新模型 Gemini Decision 1 驱动，用于路由、规则检查、评分这类有限选项的判断：一次给候选项打分，返回概率和确定度，单次最多 1000 个问题；输入每百万 token 0.1 美元，输出免费。',['Google 博客','https://blog.google/innovation-and-ai/technology/developers-tools/gemini-decisions-api']],
+  ['11-11','ali','model','media','Qwen4-Max 预览版先上线阿里 Token Plan','新一代千问大模型 Qwen4 即将发布，旗舰版 Qwen4-Max 预览版先在阿里 Token Plan 上线，限时最低 1 折；千问办公、Qoder、千问 App、QwenStudio 等已接入。',['财联社','https://m.cls.cn/detail/2531047']],
+  ['11-09','ali','product','media','千问办公 2.0：多人和 Agent 在同一个协作空间干活','号称首个支持多人与 Agent 协作的办公 Agent：协作空间关联钉钉群聊、文档、AI 表格，可给数字员工派任务；新增按事件触发的自动任务；已在客户端全量上线。',['科技日报','https://www.stdaily.com/web/gdxw/2026-11/09/content_610951.html']],
   ['11-09','anthropic','model','media','Anthropic 发布 Claude Fable 5.2 和 Mythos 5.2','编码、推理和视觉能力提升，速度比 5.1 快最多 30%；价格为每百万 token 输入 8 美元、输出 40 美元，当周付费用户有额外用量。',['9to5Mac','https://9to5mac.com/2026/11/09/anthropic-upgrades-claude-with-new-fable-5-2-model-details-here/']],
   ['11-02','google','model','off','Google 10 月发布 Gemini 4 Argon，两周后公布 Gemini 4 Carbon','Argon 是前沿推理模型，面向复杂编程、金融分析和法律工作流，已进入 AI Studio、Gemini API、Google Cloud、搜索和 Gemini App；Carbon 主打长程工程和网络安全防御，先给美国政府和可信防御方测试；同期发布实时交互世界模型 Genie 4。',['Google 博客 · 10 月 AI 动态汇总','https://blog.google/innovation-and-ai/technology/ai/google-ai-updates-october-2026/']],
 
@@ -65,11 +69,12 @@ const U = [
 const REPORT = {
   11: {
     partial: true,
-    h1: '11 月上半月，新模型<mark>更快、更省</mark>',
-    lead: '截至 11 月 15 日：Anthropic 发布 Fable 5.2 和 Mythos 5.2，速度比 5.1 快最多 30%；Google 推出专做打分判断的 Gemini Decisions API，输出不收费；豆包工作接入 Kimi、GLM、DeepSeek，并下调两款模型的额度倍率。另外，Google 汇总了 10 月发布的 Gemini 4 Argon，英伟达 CEO 黄仁勋辞职。完整月报在 11 月 30 日 18:00 生成。',
+    h1: '11 月至今，新模型<mark>更快、更省</mark>',
+    lead: '截至 11 月 17 日：Anthropic 发布 Fable 5.2 和 Mythos 5.2，速度比 5.1 快最多 30%；Qwen4-Max 预览版限时最低 1 折；美团以 MIT 许可开源 1.6 万亿参数的 LongCat-2.5；Google 推出输出不收费的 Gemini Decisions API。趋势上，Sierra 发布个人 Agent 协议 Poppy 1.0，Shopify 全站启用；千问办公 2.0 把 Agent 带进多人协作。另外，英伟达 CEO 黄仁勋辞职。完整月报在 11 月 30 日 18:00 生成。',
     sum: {
-      model:   'Anthropic 发布 Fable 5.2 和 Mythos 5.2，速度比 5.1 快最多 30%；Google 汇总了 10 月发布的 Gemini 4 Argon 和随后公布的 Carbon。',
-      product: 'Google 推出 Gemini Decisions API，输出免费。',
+      model:   'Anthropic 发布 Fable 5.2 和 Mythos 5.2，速度比 5.1 快最多 30%；Qwen4-Max 预览版上线，限时最低 1 折；美团开源 LongCat-2.5；Google 汇总了 10 月发布的 Gemini 4 Argon 和随后公布的 Carbon。',
+      trend:   'Sierra 发布个人 Agent 协议 Poppy 1.0，Shopify 全站启用，Meta Muse 访问网站时优先找它。',
+      product: 'Google 推出 Gemini Decisions API，输出免费；千问办公 2.0 推出多人与 Agent 协作空间。',
       feature: '豆包工作接入 Kimi、GLM、DeepSeek 等第三方模型，并标出额度倍率。',
       event:   '英伟达 CEO 黄仁勋辞职，CFO 暂代。',
     },
@@ -117,5 +122,5 @@ const REPORT = {
   },
 };
 
-return { NOW: '2026-11-15', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
+return { NOW: '2026-11-17', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
 })();
