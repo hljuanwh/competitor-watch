@@ -202,6 +202,20 @@ if (!KEYS.includes(key)) key = 'ccm';
 try { localStorage.setItem('cw:space', key); } catch (e) {}
 
 const DATA = window.CW_SPACES || {};
+/* 月份按数据截止日（NOW）推算：从 START 所在月到 NOW 所在月，倒序；本月之前的都算完整月。
+   某个月还没写月报时，补一个只含条数的占位，页面不会报错。只处理 2026 年内。 */
+for (const k of KEYS) {
+  const d = DATA[k]; if (!d) continue;
+  const cur = +d.NOW.slice(5, 7), start = +d.START.slice(5, 7);
+  d.MONTHS = []; for (let m = cur; m >= start; m--) d.MONTHS.push(m);
+  d.LATEST_FULL = cur - 1;
+  d.REPORT = d.REPORT || {};
+  for (const m of d.MONTHS) {
+    const n = d.U.filter(u => +u[0].slice(0, 2) === m).length;
+    if (!d.REPORT[m]) d.REPORT[m] = { h1: `${m} 月，<mark>已收录 ${n} 条</mark>`, lead: `${m} 月共收录 ${n} 条动态，月报正文待生成。`, sum: {} };
+    d.REPORT[m].partial = m === cur;
+  }
+}
 window.CW_SPACE = Object.assign({}, DATA[key], META[key]);
 window.CW_SPACE_LIST = KEYS.map(k => ({ key: k, av: META[k].av, name: META[k].name, desc: META[k].desc, unit: META[k].unit, comps: META[k].ORDER.length, srcs: META[k].SRC.length, total: (DATA[k] && DATA[k].U.length) || 0 }));
 window.CW_HEX = HEX;

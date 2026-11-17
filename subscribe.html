@@ -93,7 +93,7 @@
 <script src="spaces.js"></script>
 <script src="shell.js"></script>
 <script>
-const { SP, subHits, D, P, ORDER, T, U, esc, inMonth, logoHTML, tagHTML, modal, val, checked, toast, store } = CW;
+const { FULL, FULL_END, TODAY, SP, subHits, D, P, ORDER, T, U, esc, inMonth, logoHTML, tagHTML, modal, val, checked, toast, store } = CW;
 CW.side('subscribe');
 
 const K = { rt: ['实时动态', 'blue', '有新动态时'], daily: ['每日汇总', '', '每天 10:00'], mon: ['月报', 'sig', '每月最后一天 18:00'], year: ['年报', 'sig', '12 月 31 日 18:00'] };
@@ -111,12 +111,12 @@ function lastPush(s) {
   const h = hits(s);
   if (s.k.includes('rt') && h.length) c.push(`${U[h[0]][0]} 09:10`);
   if (s.k.includes('daily') && h.length) c.push(`${U[h[0]][0]} 10:00`);
-  if (s.k.includes('mon')) c.push('10-31 18:00');
+  if (s.k.includes('mon')) c.push(`${FULL_END} 18:00`);
   return c.length ? c.sort().pop() : '尚未推送';
 }
 function octPushes(s) {
   if (!s.on) return 0;
-  const h = hits(s).filter(i => U[i][0].startsWith('10-'));
+  const h = hits(s).filter(i => +U[i][0].slice(0, 2) === FULL);
   return (s.k.includes('rt') ? h.length : 0) + (s.k.includes('daily') ? new Set(h.map(i => U[i][0])).size : 0) + (s.k.includes('mon') ? 1 : 0);
 }
 const scopeHTML = s => {
@@ -130,7 +130,7 @@ function render() {
     <div class="kpi"><div class="kpi-value num">${SUBS.length}</div><div class="kpi-label">订阅<span class="demo">示意</span></div></div>
     <div class="kpi"><div class="kpi-value num">${on.length}</div><div class="kpi-label">启用中</div></div>
     <div class="kpi"><div class="kpi-value num">${on.reduce((a, s) => a + s.size, 0)}</div><div class="kpi-label">覆盖人数</div></div>
-    <div class="kpi"><div class="kpi-value num">${SUBS.reduce((a, s) => a + octPushes(s), 0)}</div><div class="kpi-label">10 月推送次数</div></div>`;
+    <div class="kpi"><div class="kpi-value num">${SUBS.reduce((a, s) => a + octPushes(s), 0)}</div><div class="kpi-label">${FULL} 月推送次数</div></div>`;
   const list = SUBS.filter(s => !filterKind || s.kind === filterKind);
   document.getElementById('list-title').innerHTML = `订阅列表<small>${list.length} 个</small><span class="demo">示意</span>`;
   document.getElementById('subs').innerHTML = list.length ? list.map(s => `
@@ -168,9 +168,9 @@ function preview() {
     }
   } else if (s.k.includes('mon')) {
     const R = D.REPORT[D.LATEST_FULL];
-    time.textContent = '10-31 18:00';
-    msg.innerHTML = `<div class="msg-head">10 月竞品月报<span>${esc(SP.name)}</span></div>
-      <div class="msg-body"><h4>${R.h1.replace(/<[^>]+>/g, '')}</h4>${inMonth(10).length} 条新动态，比 9 月${inMonth(10).length >= inMonth(9).length ? '多' : '少'} ${Math.abs(inMonth(10).length - inMonth(9).length)} 条。</div>
+    time.textContent = `${FULL_END} 18:00`;
+    msg.innerHTML = `<div class="msg-head">${FULL} 月竞品月报<span>${esc(SP.name)}</span></div>
+      <div class="msg-body"><h4>${R.h1.replace(/<[^>]+>/g, '')}</h4>${inMonth(FULL).length} 条新动态，比 ${FULL - 1} 月${inMonth(FULL).length >= inMonth(FULL - 1).length ? '多' : '少'} ${Math.abs(inMonth(FULL).length - inMonth(FULL - 1).length)} 条。</div>
       <div class="msg-foot"><span class="pri">阅读月报</span><span>全部动态</span></div>`;
   } else {
     time.textContent = '12-31 18:00';
@@ -185,7 +185,7 @@ function renderLog() {
   const rows = [];
   for (const i of U.map((_, j) => j).slice(0, 12)) for (const s of SEED.filter(x => x.on && x.k.includes('rt')))
     if (hits(s).includes(i)) rows.push([`${U[i][0]} 09:10`, s.name, '动态 · ' + U[i][4]]);
-  for (const s of SEED.filter(x => x.on && x.k.includes('mon'))) rows.push(['10-31 18:00', s.name, '月报 · ' + D.REPORT[10].h1.replace(/<[^>]+>/g, '')]);
+  for (const s of SEED.filter(x => x.on && x.k.includes('mon'))) rows.push([`${FULL_END} 18:00`, s.name, '月报 · ' + D.REPORT[FULL].h1.replace(/<[^>]+>/g, '')]);
   rows.sort((a, b) => b[0].localeCompare(a[0]));
   document.getElementById('log').innerHTML = rows.slice(0, 8).map(([t, who, what]) => `
     <tr><td class="muted num" style="white-space:nowrap">${t}</td><td style="white-space:nowrap;color:var(--ink)">${esc(who)}</td><td>${esc(what)}</td><td class="r"><span class="st ok">已送达</span></td></tr>`).join('');
@@ -223,7 +223,7 @@ function editor(s) {
     },
   });
   const hint = () => { const f = m.form; const tmp = { ps: checked(f, 'ps'), ts: checked(f, 'ts') }; const h = hits(tmp);
-    m.form.querySelector('#e-hint').textContent = `按这组条件，7 月以来会命中 ${h.length} 条动态，其中 10 月 ${h.filter(i => U[i][0].startsWith('10-')).length} 条。`; };
+    m.form.querySelector('#e-hint').textContent = `按这组条件，7 月以来会命中 ${h.length} 条动态，其中 ${FULL} 月 ${h.filter(i => +U[i][0].slice(0, 2) === FULL).length} 条。`; };
   m.form.addEventListener('change', hint); hint();
   const del = m.form.querySelector('#e-del');
   if (del) del.onclick = () => { m.close(); modal({ title: '删除订阅', sub: `「${s.name}」以后不会再收到推送。`, ok: '删除', danger: true, body: '<p class="note" style="margin:0">已经发出的消息不受影响。</p>',
@@ -233,7 +233,7 @@ function editor(s) {
 /* 事件 */
 document.getElementById('subs').addEventListener('click', e => {
   const tg = e.target.closest('[data-toggle]');
-  if (tg) { const s = SUBS.find(x => x.id === tg.dataset.toggle); s.on = !s.on; if (!s.on) s.pausedAt = '11-15'; save(); render(); toast(s.on ? `已恢复「${s.name}」` : `已暂停「${s.name}」`); e.stopPropagation(); return; }
+  if (tg) { const s = SUBS.find(x => x.id === tg.dataset.toggle); s.on = !s.on; if (!s.on) s.pausedAt = TODAY; save(); render(); toast(s.on ? `已恢复「${s.name}」` : `已暂停「${s.name}」`); e.stopPropagation(); return; }
   const ed = e.target.closest('[data-edit]');
   if (ed) { editor(SUBS.find(x => x.id === ed.dataset.edit)); return; }
   if (e.target.closest('[data-new]')) { editor(); return; }

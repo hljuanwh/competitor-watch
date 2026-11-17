@@ -81,7 +81,7 @@
 <script src="spaces.js"></script>
 <script src="shell.js"></script>
 <script>
-const { SP, FAILING, subHits, D, P, U, esc, inMonth, toast, busy } = CW;
+const { CUR, DAY, TODAY, FULL, FULL_END, shiftDay, SP, FAILING, subHits, D, P, U, esc, inMonth, toast, busy } = CW;
 CW.side('tasks');
 
 /* 数据源来自当前空间（spaces.js）；第 4 项为 true 的来源演示「连续超时」 */
@@ -104,7 +104,7 @@ function header() {
     <div class="kpi"><div class="kpi-value num">${N}</div><div class="kpi-label">数据源<span class="demo">示意</span></div></div>
     <div class="kpi"><div class="kpi-value num">${ok}</div><div class="kpi-label">运行正常</div></div>
     <div class="kpi"><div class="kpi-value num">${SRC.length - ok}</div><div class="kpi-label">需处理</div></div>
-    <div class="kpi"><div class="kpi-value num">09:00</div><div class="kpi-label">下次抓取 · 11 月 16 日</div></div>`;
+    <div class="kpi"><div class="kpi-value num">09:00</div><div class="kpi-label">下次抓取 · ${+shiftDay(1).slice(0, 2)} 月 ${+shiftDay(1).slice(3)} 日</div></div>`;
 }
 
 /* ---------- 流水线 ---------- */
@@ -120,7 +120,7 @@ const STEPS = () => {
 };
 function flow(state = 'done', at = 5) {
   const [m, d] = LAST.split('-').map(Number);
-  document.getElementById('flow-title').innerHTML = state === 'run' ? '正在抓取<small>11 月 15 日</small>' : `最近一次有新动态<small>${m} 月 ${d} 日</small><span class="demo">数量为示意</span>`;
+  document.getElementById('flow-title').innerHTML = state === 'run' ? `正在抓取<small>${CUR} 月 ${DAY} 日</small>` : `最近一次有新动态<small>${m} 月 ${d} 日</small><span class="demo">数量为示意</span>`;
   const st = document.getElementById('flow-st');
   st.className = 'st ' + (state === 'run' ? 'run' : 'ok');
   st.textContent = state === 'run' ? `第 ${Math.min(at + 1, 5)} 步 / 共 5 步` : '今天 09:00 已运行 · 没有新动态';
@@ -136,10 +136,10 @@ function flow(state = 'done', at = 5) {
 const TYPE = { crawl: ['抓取', ''], write: ['AI 撰写', 'blue'], push: ['推送', ''], mon: ['月报', 'sig'] };
 function buildRuns() {
   const rows = [];
-  const days = ['11-15', '11-14', '11-13', '11-12', '11-11', '11-10', '11-09'];
+  const days = [0, -1, -2, -3, -4, -5, -6].map(shiftDay);
   for (const d of days) {
     const ids = U.map((_, i) => i).filter(i => U[i][0] === d);
-    const fail = ddFailing && d >= '11-13';
+    const fail = ddFailing && d >= shiftDay(-2);
     if (ids.length) {
       const g = groupsFor(ids);
       rows.push([`${d} 09:10`, 'push', esc(ids.map(i => U[i][4]).join('；')), ['ok', `${g.length} 个群`], '4 秒']);
@@ -147,14 +147,14 @@ function buildRuns() {
     }
     rows.push([`${d} 09:00`, 'crawl', `${N} 个来源`, [fail ? 'warn' : 'ok', `${ids.length ? `新增 ${ids.length}` : '无新增'}${fail ? ' · 1 个超时' : ''}`], fail ? '6 分 48 秒' : '4 分 26 秒']);
   }
-  rows.push(['10-31 18:01', 'push', `10 月月报推送到 ${SP.SEED.filter(s => s.on && s.kind === 'group' && s.k.includes('mon')).length} 个群`, ['ok', '已送达'], '6 秒']);
-  rows.push(['10-31 18:00', 'mon', `生成 10 月月报，依据 ${inMonth(10).length} 条动态`, ['ok', '完成'], '2 分 14 秒']);
+  rows.push([`${FULL_END} 18:01`, 'push', `${FULL} 月月报推送到 ${SP.SEED.filter(s => s.on && s.kind === 'group' && s.k.includes('mon')).length} 个群`, ['ok', '已送达'], '6 秒']);
+  rows.push([`${FULL_END} 18:00`, 'mon', `生成 ${FULL} 月月报，依据 ${inMonth(FULL).length} 条动态`, ['ok', '完成'], '2 分 14 秒']);
   return rows;
 }
 let RUNS = buildRuns(), ftype = '';
 function runs() {
   const list = RUNS.filter(r => !ftype || r[1] === ftype);
-  document.getElementById('runs-sub').textContent = `11 月 9 日以来 · ${list.length} 条`;
+  document.getElementById('runs-sub').textContent = `${+shiftDay(-6).slice(0, 2)} 月 ${+shiftDay(-6).slice(3)} 日以来 · ${list.length} 条`;
   document.getElementById('runs').innerHTML = list.map(([t, ty, what, [st, res], dur]) => `
     <tr><td class="muted num" style="white-space:nowrap">${t}</td><td><span class="kind ${TYPE[ty][1]}">${TYPE[ty][0]}</span></td><td style="color:var(--ink)">${what}</td><td><span class="st ${st}">${res}</span></td><td class="r muted num" style="white-space:nowrap">${dur}</td></tr>`).join('');
 }
@@ -162,9 +162,9 @@ function runs() {
 /* ---------- 数据源 ---------- */
 function sources() {
   document.getElementById('sources').innerHTML = SRC.map(([n, p, sub, dd], k) => {
-    if (dd && ddFailing) return `<div class="src-row"><b>${n}</b><button class="btn sm" data-retry="${k}">重试</button><small class="warn">${sub} · 连续 3 天超时，上次成功 11-12</small></div>`;
+    if (dd && ddFailing) return `<div class="src-row"><b>${n}</b><button class="btn sm" data-retry="${k}">重试</button><small class="warn">${sub} · 连续 3 天超时，上次成功 ${shiftDay(-3)}</small></div>`;
     const last = p ? U.find(u => u[1] === p && u[3] === 'off') : null;
-    return `<div class="src-row"><b>${n}</b><span class="st ok">正常</span><small>${sub} · 11-15 09:00${last ? ` · 最近收录 ${last[0]}` : ''}</small></div>`;
+    return `<div class="src-row"><b>${n}</b><span class="st ok">正常</span><small>${sub} · ${TODAY} 09:00${last ? ` · 最近收录 ${last[0]}` : ''}</small></div>`;
   }).join('');
 }
 
@@ -172,7 +172,7 @@ document.getElementById('sources').addEventListener('click', e => {
   const b = e.target.closest('[data-retry]'); if (!b) return;
   busy(b, '重试中', 1500, () => {
     ddFailing = false; RUNS = buildRuns();
-    RUNS.unshift(['11-15 ' + new Date().toTimeString().slice(0, 5), 'crawl', `${BAD}（手动重试）`, ['ok', '成功 · 无新增'], '41 秒']);
+    RUNS.unshift([TODAY + ' ' + new Date().toTimeString().slice(0, 5), 'crawl', `${BAD}（手动重试）`, ['ok', '成功 · 无新增'], '41 秒']);
     header(); flow(); runs(); sources(); toast(`${BAD}已恢复，没有新内容`);
   });
 });
@@ -182,7 +182,7 @@ document.getElementById('btn-crawl').onclick = e => {
   busy(btn, '抓取中…', 3200);
   flow('run', 0);
   const tick = setInterval(() => { at++; flow('run', at); if (at >= 5) { clearInterval(tick); setTimeout(() => {
-    RUNS.unshift(['11-15 ' + new Date().toTimeString().slice(0, 5), 'crawl', `${N} 个来源（手动）`, [ddFailing ? 'warn' : 'ok', `无新增${ddFailing ? ' · 1 个超时' : ''}`], '3 秒']);
+    RUNS.unshift([TODAY + ' ' + new Date().toTimeString().slice(0, 5), 'crawl', `${N} 个来源（手动）`, [ddFailing ? 'warn' : 'ok', `无新增${ddFailing ? ' · 1 个超时' : ''}`], '3 秒']);
     flow(); runs(); toast(ddFailing ? `抓取完成：没有新动态，${BAD}仍然超时` : '抓取完成：没有新动态', ddFailing ? 'warn' : ''); }, 300); } }, 550);
 };
 

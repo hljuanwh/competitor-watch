@@ -114,7 +114,7 @@ const off = U.filter(u => u[3] === 'off').length;
 document.getElementById('chip').textContent = `累计 ${U.length} 条`;
 document.getElementById('kpis').innerHTML = `
   <div class="kpi"><div class="kpi-value num">${U.length}</div><div class="kpi-label">累计收录 · 7 月起</div></div>
-  <div class="kpi"><div class="kpi-value num">${CW.inMonth(11).length}</div><div class="kpi-label">11 月新增 · 截至 15 日</div></div>
+  <div class="kpi"><div class="kpi-value num">${CW.inMonth(CW.CUR).length}</div><div class="kpi-label">${CW.CUR} 月新增 · 截至 ${CW.DAY} 日</div></div>
   <div class="kpi"><div class="kpi-value num">${off}</div><div class="kpi-label">来自官方日志</div></div>
   <div class="kpi"><div class="kpi-value num">${new Set(U.map(u => u[1])).size}<sup class="down">/${ORDER.length}</sup></div><div class="kpi-label">有过更新的竞品</div></div>`;
 document.getElementById('f-m').innerHTML = ['all', ...D.MONTHS].map(m => `<button data-v="${m}"${m === 'all' ? ' class="on"' : ''}>${m === 'all' ? '全部' : m + ' 月'}</button>`).join('');

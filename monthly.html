@@ -65,7 +65,7 @@
 <script src="spaces.js"></script>
 <script src="shell.js"></script>
 <script>
-const { SP, D, P, ORDER, T, U, esc, md, inMonth, kindHTML, logoHTML, toast, busy, pushDialog } = CW;
+const { CUR, DAY, MONTH_END, SP, D, P, ORDER, T, U, esc, md, inMonth, kindHTML, logoHTML, toast, busy, pushDialog } = CW;
 CW.side('monthly');
 
 const strip = h => h.replace(/<[^>]+>/g, '');
@@ -90,7 +90,7 @@ function render() {
     <h1 id="s-sum">${R.h1}</h1>
     <p class="lead">${esc(R.lead)}</p>
     <div class="kpis">
-      <div class="kpi"><div class="kpi-value num">${idx.length}${delta == null || R.partial ? '' : `<sup${delta < 0 ? ' class="down"' : ''}>${delta > 0 ? '+' : delta < 0 ? '−' : '±'}${Math.abs(delta)}</sup>`}</div><div class="kpi-label">${R.partial ? '已收录 · 截至 15 日' : prevIdx ? `新动态 · 较 ${M - 1} 月 ${prevIdx.length} 条` : '新动态 · 收录首月'}</div></div>
+      <div class="kpi"><div class="kpi-value num">${idx.length}${delta == null || R.partial ? '' : `<sup${delta < 0 ? ' class="down"' : ''}>${delta > 0 ? '+' : delta < 0 ? '−' : '±'}${Math.abs(delta)}</sup>`}</div><div class="kpi-label">${R.partial ? '已收录 · 截至 ${DAY} 日' : prevIdx ? `新动态 · 较 ${M - 1} 月 ${prevIdx.length} 条` : '新动态 · 收录首月'}</div></div>
       <div class="kpi"><div class="kpi-value num">${comps}<sup class="down">/${ORDER.length}</sup></div><div class="kpi-label">有更新的竞品</div></div>
       <div class="kpi"><div class="kpi-value num">${off}</div><div class="kpi-label">来自官方日志</div></div>
       <div class="kpi"><div class="kpi-value num">${themes[0][1].length}</div><div class="kpi-label">最多的主题 · ${T[themes[0][0]][0]}</div></div>
@@ -108,7 +108,7 @@ function render() {
           return `<tr><td><span class="who-cell">${logoHTML(p, true)}${P[p].name}</span></td><td${ids.length ? '' : ' class="muted"'}>${ids.length ? `<div class="titles">${ids.map(i => `<a href="detail.html#u${i}">${esc(U[i][4])}</a>`).join('')}</div>` : `${M} 月无收录`}</td><td class="r num" style="color:var(--ink);font-weight:600">${ids.length}</td></tr>`; }).join('')}</tbody>
       </table>
     </div>
-    <div class="doc-foot">数据说明：${idx.length} 条动态均为公开信息，每条附来源链接。「官方」指厂商自己的更新日志或博客，「媒体」指新闻报道或转载。平台从 2026 年 7 月开始收录。各主题小结由 AI 根据当月动态写成，只使用上面列出的事实。${R.partial ? `本月还没结束，完整月报在 11 月 30 日 18:00 生成。` : ''}</div>`;
+    <div class="doc-foot">数据说明：${idx.length} 条动态均为公开信息，每条附来源链接。「官方」指厂商自己的更新日志或博客，「媒体」指新闻报道或转载。平台从 2026 年 7 月开始收录。各主题小结由 AI 根据当月动态写成，只使用上面列出的事实。${R.partial ? `本月还没结束，完整月报在 ${CUR} 月 ${+MONTH_END.slice(3)} 日 18:00 生成。` : ''}</div>`;
 
   document.getElementById('toc').innerHTML =
     `<a href="#s-sum" class="on">本月结论</a>` +
@@ -117,7 +117,7 @@ function render() {
 
   const top2 = themes.slice(0, 2);
   document.getElementById('chat').innerHTML = `
-    <div class="chat-head"><svg viewBox="0 0 32 32"><use href="#mark"/></svg><b>竞品观测</b>机器人 · ${R.partial ? '11-30 18:00 发送' : `${M}-${last(M)} 18:00`}</div>
+    <div class="chat-head"><svg viewBox="0 0 32 32"><use href="#mark"/></svg><b>竞品观测</b>机器人 · ${R.partial ? `${MONTH_END} 18:00 发送` : `${M}-${last(M)} 18:00`}</div>
     <div class="msg">
       <div class="msg-head">${M} 月竞品月报${R.partial ? '（预览）' : ''}<span>${esc(SP.name)}</span></div>
       <div class="msg-body">
@@ -128,7 +128,7 @@ function render() {
       <div class="msg-foot"><span class="pri">阅读月报</span><span>全部动态</span></div>
     </div>`;
   document.getElementById('pushlog').innerHTML = R.partial
-    ? `<div><span>11 月月报</span><span class="st idle">11-30 18:00 发送</span></div>`
+    ? `<div><span>${CUR} 月月报</span><span class="st idle">${MONTH_END} 18:00 发送</span></div>`
     : SP.SEED.filter(s => s.on && s.kind === 'group' && s.k.includes('mon')).map(({ name: g, size: n }) => `<div><span><b>${g}</b> · ${n} 人</span><span class="st ok">已送达</span></div>`).join('');
 
   document.getElementById('btn-push').disabled = !!R.partial;

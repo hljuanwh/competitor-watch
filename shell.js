@@ -40,6 +40,13 @@ document.body.insertAdjacentHTML('afterbegin', `<svg width="0" height="0" style=
 const SP = window.CW_SPACE, SPACES = window.CW_SPACE_LIST;
 const D = SP, P = SP.P, ORDER = SP.ORDER, T = SP.T;
 const U = D.U;
+/* 日期：一切「今天」「本月」都从数据截止日 D.NOW 推算，定时更新只改数据文件 */
+const pad2 = n => String(n).padStart(2, '0');
+const CUR = +D.NOW.slice(5, 7), DAY = +D.NOW.slice(8, 10), TODAY = D.NOW.slice(5);
+const lastDay = m => new Date(2026, m, 0).getDate();
+const mmdd = (m, d) => `${pad2(m)}-${pad2(d)}`;
+const shiftDay = n => { const x = new Date(2026, CUR - 1, DAY + n); return mmdd(x.getMonth() + 1, x.getDate()); };
+const FULL = D.LATEST_FULL, MONTH_END = mmdd(CUR, lastDay(CUR)), FULL_END = mmdd(FULL, lastDay(FULL));
 /* 带上当前空间的站内链接：index.html → index.html?s=b2b（CCM 是默认空间，不加参数） */
 const withSpace = (href, k = SP.key) => {
   const m = /^([\w-]+\.html)(\?[^#]*)?(#.*)?$/.exec(href || '');
@@ -89,7 +96,7 @@ function feedHTML(idx, opts) {
 /* ---------- 侧栏：与首页一致，只换选中项 ---------- */
 const NAV = [
   ['index',     '总览', 'i-grid',  'index.html'],
-  ['feed',      '动态', 'i-feed',  'feed.html', inMonth(11).length],
+  ['feed',      '动态', 'i-feed',  'feed.html', inMonth(CUR).length],
   ['monthly',   '月报', 'i-cal',   'monthly.html'],
   ['annual',    '年报', 'i-book',  'annual.html'],
   ['subscribe', '订阅', 'i-bell',  'subscribe.html'],
@@ -251,5 +258,5 @@ const subHits = (s, i) => (!s.ps.length || s.ps.includes(U[i][1])) && (!s.ts.len
 const srcOf = p => SP.SRC.filter(s => s[1] === p).map(s => s[0]);
 const FAILING = SP.SRC.find(s => s[3]);
 
-window.CW = { SP, SPACES, HEX: window.CW_HEX, withSpace, subHits, srcOf, FAILING, D, P, ORDER, T, U, KIND, esc, md, monthOf, inMonth, count, kindHTML, dayHTML, logoHTML, tagHTML, itemHTML, feedHTML, side, toast, modal, val, checked, busy, store, pushDialog, GROUPS };
+window.CW = { CUR, DAY, TODAY, FULL, MONTH_END, FULL_END, lastDay, mmdd, shiftDay, SP, SPACES, HEX: window.CW_HEX, withSpace, subHits, srcOf, FAILING, D, P, ORDER, T, U, KIND, esc, md, monthOf, inMonth, count, kindHTML, dayHTML, logoHTML, tagHTML, itemHTML, feedHTML, side, toast, modal, val, checked, busy, store, pushDialog, GROUPS };
 })();
