@@ -108,8 +108,8 @@ function side(active) {
   if (!el) return;
   el.innerHTML = `
     <div class="brand">
-      <svg class="brand-mark" viewBox="0 0 32 32" role="img" aria-label="竞品观测标志"><use href="#mark"/></svg>
-      <div class="brand-name">竞品观测</div>
+      <svg class="brand-mark" viewBox="0 0 32 32" role="img" aria-label="资讯标志"><use href="#mark"/></svg>
+      <div class="brand-name">资讯</div>
     </div>
     <div class="space-wrap">
       <div class="space" role="button" tabindex="0" aria-haspopup="menu" aria-expanded="false" id="space-btn">
