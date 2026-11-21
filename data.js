@@ -1,5 +1,5 @@
 /* ===== 竞品观测 · 收录数据 =====
-   口径：2026-07-01 起收录，截至 2026-11-17。全部是公开信息，每条附来源链接。
+   口径：2026-07-01 起收录，截至 2026-11-21。全部是公开信息，每条附来源链接。
    2026-11-17 补收 11-16 的 1 条（Google Docs 对比 Word 文件）。
    7 月 15 条沿用 2026-11-07 检索结果；8–11 月 45 条于 2026-11-15 检索并逐条读过原文（含补查的 Google 8、9 月上中旬 7 条）。
    「官方」= 厂商自己的更新日志或博客；「媒体」= 新闻报道或转载（官方原文没能读到时使用）。
@@ -16,7 +16,8 @@ const CLG = ['Claude 更新日志', 'https://claude.com/docs/cowork/changelog'];
 
 /* [日期, 竞品, 主题, 来源类型, 标题, 摘要, [来源名, 链接]]，按日期倒序 */
 const U = [
-  /* ---------- 11 月（截至 11-17） ---------- */
+  /* ---------- 11 月（截至 11-21） ---------- */
+  ['11-18','google','ship','off','Google Docs 新增图注、交叉引用和图注目录','可插入自动编号的图、表、公式标签，增删后自动重新排序；交叉引用的显示文字随图注更新；还能生成带页码的可点击图注目录；与 Word（.docx）导入导出兼容；面向所有 Workspace 和个人账号，默认开启。',gw('2026/11/add-inline-captions-cross-references-and-tables-of-captions-in-Google-Docs.html')],
   ['11-16','google','ship','off','Google Docs 可以直接对比两个 Word 文件，不用先转换','文档对比工具支持 .docx，比较 Word 文件时不必先转成 Google 文档，Drive 里不会多出重复文件；面向所有 Workspace 和个人账号，默认开启。',gw('2026/11/review-edits-across-microsoft-word-docx-and-Google-Docs-files.html')],
   ['11-12','claude','ship','off','Claude 任务里的文件可直接下载，Markdown 预览支持 Mermaid 图','在电脑上运行的任务产出的文件新增下载选项；回复和 Markdown 文件预览会渲染 Mermaid 图。',CLG],
   ['11-11','google','ship','off','Sheets 画布可以发布成独立的只读链接','把 Sheets 画布发布到单独的链接，访问权限与原表格的共享设置分开；目前仅限网页版。',gw('2026/11/publish-sheets-canvas-as-standalone-link.html')],
@@ -148,7 +149,7 @@ const REPORT = {
   },
 };
 
-return { NOW: '2026-11-17', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
+return { NOW: '2026-11-21', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
 })();
 
 /* 注册为「CCM 云文档」空间的数据 */
