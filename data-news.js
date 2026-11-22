@@ -1,5 +1,5 @@
 /* ===== 观测空间 · AI 热门资讯 · 收录数据 =====
-   口径：2026-07-01 起收录，截至 2026-11-21。全部是公开信息，每条附来源链接；2026-11-15 检索并读过原文或报道正文。
+   口径：2026-07-01 起收录，截至 2026-11-22。全部是公开信息，每条附来源链接；2026-11-15 检索并读过原文或报道正文。
    范围：模型发布、新产品、新功能、新趋势、资本动向、监管与行业事件，重点是前三类和趋势。
    「官方」= 公司自己的博客或新闻稿；「媒体」= 新闻报道、周报或第三方索引。
    周报类来源（Tech Startups、Digital Applied、AI Funding）只用于它们明确写出日期和主体的条目。
@@ -13,9 +13,12 @@ const FS8 = ['科技日报', 'https://www.stdaily.com/web/gdxw/2026-09/16/conten
 
 /* [日期, 主体, 主题, 来源类型, 标题, 摘要, [来源名, 链接]]，按日期倒序 */
 const U = [
-  /* ---------- 11 月（截至 11-21） ---------- */
+  /* ---------- 11 月（截至 11-22） ---------- */
+  ['11-20','anthropic','money','off','Anthropic 完成 IPO 交割：每股 83 美元发行约 11.27 亿股','承销商全额行使超额配售权，一并完成同期私募；Anthropic 公告称 IPO 总募资约 935 亿美元（含现有股东出售的股份），另有 260 亿美元私募。',['Anthropic 公告','https://www.anthropic.com/news/ipo-close']],
+  ['11-19','google','feature','off','Gemini Mac 版上线 computer use：在后台窗口替你点选、输入、跨应用做事','可跨本地文件、桌面应用和网页完成多步任务，在独立窗口运行、聊天里实时预览；由用户选择可访问的应用，关键操作需确认；目前仅限美国英文、个人账号的 Google AI Plus/Pro/Ultra 用户，需 Apple 芯片 Mac。',['Google 博客','https://blog.google/innovation-and-ai/products/gemini-app/computer-use-mac/']],
   ['11-19','ali','model','media','Qwen4-Max 正式上线，输入价每百万 token 0.075 美元','2.4 万亿参数、每个 token 激活 710 亿，原生支持视觉，上下文 100 万 token；通过 QwenCloud Token Plan、API 以及 QwenWork、QwenStudio 使用；阿里称较 Qwen3.8-Max 高强度推理少用 35% token、单任务成本降约 60%，并计划稍后发布更小的开源 Qwen4 模型。',['TokenPost','https://www.tokenpost.com/news/technology/61191']],
   ['11-18','google','model','off','Google 发布 Gemini 4 Neon：定位介于 Carbon 与 Hydrogen 之间的前沿模型','面向复杂编程、知识工作和科研，上下文 100 万 token，价格每百万 token 输入 3 美元、输出 15 美元；Google 称在 Artificial Analysis 智能指数得 61 分、排第三；已在 Gemini API、Gemini for business、Antigravity 和 Gemini App（Pro/Ultra）上线，Gemini 里的任务也可以用它跑。',['Google 博客','https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-neon/']],
+  ['11-17','openai','model','off','OpenAI 发布 GPT-6.2 Astra 和 Sol，Astra API 价格下调 20%','Astra 面向最难的专业任务，Sol 面向日常工作，两者用更少输出 token 完成任务；Astra 每百万 token 输入 8 美元、缓存输入 0.4 美元、输出 40 美元，Sol 沿用 GPT-6.1 Sol 的价格；ChatGPT Work、Codex 和 API 同日上线。OpenAI 称 Astra 生成的幻灯片、表格和文档更贴合用户模板与行业惯例。',['OpenAI','https://openai.com/index/introducing-gpt-6-2-astra-sol']],
   ['11-15','other','model','media','美团开源 LongCat-2.5：1.6 万亿参数的 Agent 模型','混合专家架构，每个 token 激活约 480 亿参数；权重以 MIT 许可开放，可商用；报道称完全在国产硬件上训练，示例部署用的是华为昇腾。',['The Decoder','https://the-decoder.com/meituan-releases-a-1-6-trillion-parameter-agent-model-that-never-touched-an-nvidia-gpu/']],
   ['11-13','other','trend','media','Sierra 发布个人 Agent 协议 Poppy 1.0，Shopify 全站启用','企业用这个协议告诉来访的 Agent 它在替谁办事、可以做什么；Shopify 为平台上所有店铺开启，Meta Muse 访问网站时会先找 Poppy；100 多家公司参与设计，规范仍标为草案。',['The Next Web','https://thenextweb.com/news/sierra-poppy-1-0-shopify-meta-muse-personal-agents']],
   ['11-12','other','event','media','英伟达 CEO 黄仁勋辞职，CFO 暂代','TechCrunch 报道，黄仁勋承认与一名被指为中国间谍的人有婚外关系后辞职，英伟达任命 CFO Colette Kress 为临时 CEO；报道认为英伟达对开源 AI 的支持存在变数，约 130 亿美元收购 Hugging Face 一事尚未完成。',['TechCrunch','https://techcrunch.com/2026/11/12/jensen-huangs-exit-puts-nvidias-support-for-open-source-in-question']],
@@ -124,5 +127,5 @@ const REPORT = {
   },
 };
 
-return { NOW: '2026-11-21', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
+return { NOW: '2026-11-22', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
 })();
