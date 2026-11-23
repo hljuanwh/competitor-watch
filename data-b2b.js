@@ -1,5 +1,5 @@
 /* ===== 观测空间 · B 端 AI 办公 · 收录数据 =====
-   口径：2026-07-01 起收录，截至 2026-11-17。全部是公开信息，每条附来源链接；2026-11-15 检索并读过原文或报道正文。
+   口径：2026-07-01 起收录，截至 2026-11-23。全部是公开信息，每条附来源链接；2026-11-15 检索并读过原文或报道正文。
    「官方」= 厂商自己的博客、新闻稿或更新日志；「媒体」= 新闻报道、转载，或发布说明的第三方索引（官方页面无法直接读取时使用）。
    和「CCM 云文档」空间重叠的条目（Notion、Google、微软等）沿用那边已核实的文字和来源。
    没检索到可核实发布的月份如实留空：钉钉 9 月以外、Slack 9 月以外、企业微信 8 月（报道页无法打开，未收）。 */
@@ -19,7 +19,13 @@ const WWB = ['科技日报', 'https://www.stdaily.com/web/gdxw/2026-10/14/conten
 
 /* [日期, 产品, 主题, 来源类型, 标题, 摘要, [来源名, 链接]]，按日期倒序 */
 const U = [
-  /* ---------- 11 月（截至 11-17） ---------- */
+  /* ---------- 11 月（截至 11-23） ---------- */
+  ['11-20','m365','price','off','Copilot 可用 GPT-6.2 Sol 和 Astra','Sol 向符合条件的用户在 Copilot Chat、Cowork、Copilot Studio，以及 Excel、PowerPoint、Word 中全球推开；Astra 先在 Cowork 和 Studio 推开，Frontier 用户还能在 Chat 和这三款应用里使用。Work IQ 只按本人已有权限取用文件、会议和聊天。管理员在 Microsoft 365 管理中心配置。',['Microsoft Copilot 博客','https://techcommunity.microsoft.com/blog/microsoft-copilot-blog/available-today-openais-gpt-6-2-sol-and-gpt-6-2-astra-in-microsoft-copilot/4574229']],
+  ['11-20','claude','agent','off','Claude 电脑操作向 Team 和 Enterprise 开放测试','电脑操作让 Claude 看见用户允许的屏幕，并在这些桌面应用里干活；可在新的 Claude 桌面体验里使用，网页版和手机版需打开电脑访问。正在按组织陆续开放。',['Claude 帮助中心发布说明','https://support.claude.com/en/articles/12138966-release-notes']],
+  ['11-20','chatgpt','price','off','ChatGPT Space 开始向 Plus 用户开放','18 岁及以上的 Plus 用户可以在 Space 里做出可交互的页面和演示，并邀请同样开通了 Space 的人一起改。打开别人分享的页面或演示，需要 Plus、Pro、Business 或 Enterprise 账号，且本人已开通 Space。',['ChatGPT 发布说明','https://help.openai.com/en/articles/6825453-chatgpt-release-notes']],
+  ['11-19','google','govern','off','管理员可以限制 Workspace Studio 流程联系别人','新增「协作步骤」：可以允许流程发邮件、在 Chat 发消息、改共享文件，也可以收成只有创建者能看到的动作，例如通知、草稿和修改自己的文件。默认开启，可按网域、组织单位或群组调整。',gw('2026/11/new-admin-setting-to-control-collaboration-steps-in-Workspace-Studio-flows.html')],
+  ['11-18','slack','agent','off','Slack 工作流可以直接交给 Slackbot 或其他 Agent','Workflow Builder 可以加入和 Slackbot 或第三方 Agent 的对话步骤；Slackbot 任务能在新消息或表情出现时启动，Agent 任务可以把一条提示词设成定时运行。AI 写出的内容会先停下给人改、给人批，通过后才写入 Jira、表格或 Salesforce。Workflow Builder 含在 Pro、Business+ 和 Enterprise 里。',['Slack 博客','https://slack.com/blog/news/agents-in-workflow-builder']],
+  ['11-18','muse','connect','off','Muse 接上加拿大零售商 Loblaw，语音在加拿大上线','Loblaw 是首家接入 Muse 的加拿大零售商，用户可以在 Muse 里规划餐食、建立购物车并结账；语音在加拿大的手机、网页和 Mac 上线。用户也可以用一句话做自己的 space。发信和付款前仍要本人确认，密码和支付方式不进入 Agent 视野。',['Meta 新闻室','https://about.fb.com/news/2026/11/meta-welcomes-loblaw-as-first-canadian-retail-partner-to-muse/']],
   ['11-16','google','agent','off','Gemini 技能可以分享，还能带上 Drive 和 Notebook 文件','在 Gemini 网页版的技能页按查看或编辑权限分享技能，接收方确认后安装；创建技能时可加入 Drive、Gemini Notebook、Google Photos 里的文件，Drive 文件实时同步；管理员可在管理控制台关闭分享。',gw('2026/11/share-skills-add-files-from-Drive-Notebook-Photos-to-skills-Gemini-app.html')],
   ['11-16','google','connect','off','Apps Script 里的 Gemini 正式可用：一句话写脚本、一键修报错','描述需求即可生成脚本，改动逐块确认；「修复错误」会解释运行时报错并给出修法；面向 Business、Enterprise 的 Standard 和 Plus 版及 Google AI Pro、Ultra，11 月 12 日起陆续上线。',gw('2026/11/customize-and-extend-workspace-with-apps-script.html')],
   ['11-12','claude','govern','off','Claude 企业部署可按 Purview 敏感度标签拦截文件','管理员设置后，带 Microsoft Purview 标签的 OneDrive、SharePoint、Outlook 内容会被拦截；联网搜索和网页读取也能设为「每次询问」或「禁止」，用户不能自行放宽。',CLG],
@@ -92,13 +98,13 @@ const REPORT = {
   11: {
     partial: true,
     h1: '11 月至今，管理员开始<mark>管预算、管敏感文件</mark>',
-    lead: '截至 11 月 17 日：Claude 企业部署能按 Purview 敏感度标签拦截文件，网关管理员可以设支出上限和共享预算；豆包工作接入 Kimi、GLM、DeepSeek，并标出每个模型的额度倍率。Agent 这边，千问办公 2.0 让多人和 Agent 在同一个协作空间干活，Google 的 Gemini 技能上线各应用、还能分享给同事。完整月报在 11 月 30 日 18:00 生成。',
+    lead: '截至 11 月 23 日：Copilot 接入 GPT-6.2 Sol 和 Astra，并接到 Word、Excel、PowerPoint；Claude 的电脑操作向 Team 和 Enterprise 开放测试；Slack 工作流可以把步骤交给 Slackbot 或其他 Agent，通过后才写入外部工具。管理员可以限制 Workspace Studio 流程能不能发消息、改共享文件。完整月报在 11 月 30 日 18:00 生成。',
     sum: {
-      govern: 'Claude 企业部署可按 Purview 标签拦截 OneDrive、SharePoint、Outlook 内容；ChatGPT Business 管理员能修改成员邮箱。',
-      price:  '豆包工作接入第三方模型并标出额度倍率；Claude 网关管理员可以设支出上限、共享预算并导出花费。',
-      agent:  'Google 的 Gemini 技能在 Docs、Gmail、Slides、Drive、Chat 中上线，并能带上 Drive 文件分享给同事。',
+      govern: 'Workspace Studio 可以限制流程只能做创建者自己看得见的动作；Claude 企业部署可按 Purview 标签拦截 OneDrive、SharePoint、Outlook 内容。',
+      price:  'Copilot 可选 GPT-6.2 Sol 和 Astra；ChatGPT Space 开始向 Plus 开放；豆包工作接入第三方模型并标出额度倍率；Claude 网关管理员可以设支出上限和共享预算。',
+      agent:  'Claude 电脑操作向 Team 和 Enterprise 开放测试；Slack 工作流可以直接交给 Slackbot 或第三方 Agent，并强制人工审阅；Google 的 Gemini 技能可分享给同事。',
       entry:  '千问办公 2.0 推出协作空间，关联钉钉群、文档和 AI 表格，多人和 Agent 一起干活。',
-      connect: 'Apps Script 里的 Gemini 正式可用，一句话写脚本、一键修报错。',
+      connect: 'Muse 在加拿大接上 Loblaw，并可在当地用语音；Apps Script 里的 Gemini 正式可用，一句话写脚本、一键修报错。',
     },
   },
   10: {
@@ -146,5 +152,5 @@ const REPORT = {
   },
 };
 
-return { NOW: '2026-11-17', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
+return { NOW: '2026-11-23', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
 })();

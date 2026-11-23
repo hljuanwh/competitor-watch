@@ -1,5 +1,5 @@
 /* ===== 观测空间 · AI 热门资讯 · 收录数据 =====
-   口径：2026-07-01 起收录，截至 2026-11-22。全部是公开信息，每条附来源链接；2026-11-15 检索并读过原文或报道正文。
+   口径：2026-07-01 起收录，截至 2026-11-23。全部是公开信息，每条附来源链接；2026-11-15 检索并读过原文或报道正文。
    范围：模型发布、新产品、新功能、新趋势、资本动向、监管与行业事件，重点是前三类和趋势。
    「官方」= 公司自己的博客或新闻稿；「媒体」= 新闻报道、周报或第三方索引。
    周报类来源（Tech Startups、Digital Applied、AI Funding）只用于它们明确写出日期和主体的条目。
@@ -13,10 +13,17 @@ const FS8 = ['科技日报', 'https://www.stdaily.com/web/gdxw/2026-09/16/conten
 
 /* [日期, 主体, 主题, 来源类型, 标题, 摘要, [来源名, 链接]]，按日期倒序 */
 const U = [
-  /* ---------- 11 月（截至 11-22） ---------- */
+  /* ---------- 11 月（截至 11-23） ---------- */
+  ['11-20','other','model','off','Thinking Machines 发布 Inkling 2 Mini，约 20GB 可在笔记本上跑','循环混合专家模型，总参数 264 亿、每 token 激活 34 亿，中间层对每个 token 跑三遍；权重大约 20GB，开放权重，当天可在 Tinker 上推理和定制。官方称在 1000 亿参数以下的开放模型里，DeepSWE v1.1 为 48.2%。',['Thinking Machines Lab','https://thinkingmachines.ai/news/inkling-2-mini/']],
+  ['11-20','anthropic','feature','off','Claude 电脑操作向 Team 和 Enterprise 开放测试','电脑操作让 Claude 看见用户允许的屏幕，并在这些桌面应用里干活；可在新的 Claude 桌面体验里使用，网页版和手机版需打开电脑访问。正在按组织陆续开放。',['Claude 帮助中心发布说明','https://support.claude.com/en/articles/12138966-release-notes']],
+  ['11-20','openai','feature','off','ChatGPT Space 开始向 Plus 用户开放','18 岁及以上的 Plus 用户可以在 Space 里做出可交互的页面和演示，并邀请同样开通了 Space 的人一起改；页面和幻灯片可以按已连接的应用自动更新。免费用户打不开别人分享的页面或演示。',['ChatGPT 发布说明','https://help.openai.com/en/articles/6825453-chatgpt-release-notes']],
   ['11-20','anthropic','money','off','Anthropic 完成 IPO 交割：每股 83 美元发行约 11.27 亿股','承销商全额行使超额配售权，一并完成同期私募；Anthropic 公告称 IPO 总募资约 935 亿美元（含现有股东出售的股份），另有 260 亿美元私募。',['Anthropic 公告','https://www.anthropic.com/news/ipo-close']],
+  ['11-19','google','product','off','Genie 4 进入 Gemini API 和 AI Studio','开发者可以用文字、参考图或两者，生成连续的 720p、每秒 24 帧互动世界，并带同步的原生音频；键盘和实时文字提示可以改天气、光线、物体或事件。Google 称由 Gemini 的推理保持世界状态连贯，输出带 SynthID 水印。',['Google 博客','https://blog.google/innovation-and-ai/technology/developers-tools/genie-4-in-gemini-api/']],
   ['11-19','google','feature','off','Gemini Mac 版上线 computer use：在后台窗口替你点选、输入、跨应用做事','可跨本地文件、桌面应用和网页完成多步任务，在独立窗口运行、聊天里实时预览；由用户选择可访问的应用，关键操作需确认；目前仅限美国英文、个人账号的 Google AI Plus/Pro/Ultra 用户，需 Apple 芯片 Mac。',['Google 博客','https://blog.google/innovation-and-ai/products/gemini-app/computer-use-mac/']],
   ['11-19','ali','model','media','Qwen4-Max 正式上线，输入价每百万 token 0.075 美元','2.4 万亿参数、每个 token 激活 710 亿，原生支持视觉，上下文 100 万 token；通过 QwenCloud Token Plan、API 以及 QwenWork、QwenStudio 使用；阿里称较 Qwen3.8-Max 高强度推理少用 35% token、单任务成本降约 60%，并计划稍后发布更小的开源 Qwen4 模型。',['TokenPost','https://www.tokenpost.com/news/technology/61191']],
+  ['11-18','meta','feature','off','Muse 在加拿大接上 Loblaw，并上线语音','Loblaw 是首家接入 Muse 的加拿大零售商，用户可以在 Muse 里规划餐食、建立购物车并结账；语音在加拿大的手机、网页和 Mac 上线，也可以用一句话做自己的 space。发信和付款前仍要本人确认。',['Meta 新闻室','https://about.fb.com/news/2026/11/meta-welcomes-loblaw-as-first-canadian-retail-partner-to-muse/']],
+  ['11-18','byte','money','media','豆包工作日活破 800 万，企业 ARR 破 20 亿元','第一财经称，11 月 18 日字节跳动宣布，豆包工作上线三个月，日活突破 800 万，企业客户年度经常性收入突破 20 亿元。',['第一财经','https://www.yicai.com/news/103446257.html']],
+  ['11-18','tencent','money','media','腾讯称 WorkBuddy 日活超 1000 万，七日收入年化超 5 亿美元','同一报道称，腾讯披露截至 11 月初 WorkBuddy 日活超过 1000 万，日均 token 调用超过 100 万亿；按最近七天收入年化，规模超过 5 亿美元。',['第一财经','https://www.yicai.com/news/103446257.html']],
   ['11-18','google','model','off','Google 发布 Gemini 4 Neon：定位介于 Carbon 与 Hydrogen 之间的前沿模型','面向复杂编程、知识工作和科研，上下文 100 万 token，价格每百万 token 输入 3 美元、输出 15 美元；Google 称在 Artificial Analysis 智能指数得 61 分、排第三；已在 Gemini API、Gemini for business、Antigravity 和 Gemini App（Pro/Ultra）上线，Gemini 里的任务也可以用它跑。',['Google 博客','https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-neon/']],
   ['11-17','openai','model','off','OpenAI 发布 GPT-6.2 Astra 和 Sol，Astra API 价格下调 20%','Astra 面向最难的专业任务，Sol 面向日常工作，两者用更少输出 token 完成任务；Astra 每百万 token 输入 8 美元、缓存输入 0.4 美元、输出 40 美元，Sol 沿用 GPT-6.1 Sol 的价格；ChatGPT Work、Codex 和 API 同日上线。OpenAI 称 Astra 生成的幻灯片、表格和文档更贴合用户模板与行业惯例。',['OpenAI','https://openai.com/index/introducing-gpt-6-2-astra-sol']],
   ['11-15','other','model','media','美团开源 LongCat-2.5：1.6 万亿参数的 Agent 模型','混合专家架构，每个 token 激活约 480 亿参数；权重以 MIT 许可开放，可商用；报道称完全在国产硬件上训练，示例部署用的是华为昇腾。',['The Decoder','https://the-decoder.com/meituan-releases-a-1-6-trillion-parameter-agent-model-that-never-touched-an-nvidia-gpu/']],
@@ -75,12 +82,13 @@ const REPORT = {
   11: {
     partial: true,
     h1: '11 月至今，新模型<mark>更快、更省</mark>',
-    lead: '截至 11 月 17 日：Anthropic 发布 Fable 5.2 和 Mythos 5.2，速度比 5.1 快最多 30%；Qwen4-Max 预览版限时最低 1 折；美团以 MIT 许可开源 1.6 万亿参数的 LongCat-2.5；Google 推出输出不收费的 Gemini Decisions API。趋势上，Sierra 发布个人 Agent 协议 Poppy 1.0，Shopify 全站启用；千问办公 2.0 把 Agent 带进多人协作。另外，英伟达 CEO 黄仁勋辞职。完整月报在 11 月 30 日 18:00 生成。',
+    lead: '截至 11 月 23 日：Anthropic 完成 IPO 交割，公告称含老股出售在内募资约 935 亿美元；Google 发布 Gemini 4 Neon，并把 Genie 4 开放到 Gemini API；Thinking Machines 发布约 20GB、可在笔记本上跑的 Inkling 2 Mini。国内这边，豆包工作宣布日活破 800 万、企业 ARR 破 20 亿元，腾讯称 WorkBuddy 日活超 1000 万。完整月报在 11 月 30 日 18:00 生成。',
     sum: {
-      model:   'Anthropic 发布 Fable 5.2 和 Mythos 5.2，速度比 5.1 快最多 30%；Qwen4-Max 预览版上线，限时最低 1 折；美团开源 LongCat-2.5；Google 汇总了 10 月发布的 Gemini 4 Argon 和随后公布的 Carbon。',
-      trend:   'Sierra 发布个人 Agent 协议 Poppy 1.0，Shopify 全站启用，Meta Muse 访问网站时优先找它。',
-      product: 'Google 推出 Gemini Decisions API，输出免费；千问办公 2.0 推出多人与 Agent 协作空间。',
-      feature: '豆包工作接入 Kimi、GLM、DeepSeek 等第三方模型，并标出额度倍率。',
+      model:   'Google 发布 Gemini 4 Neon；OpenAI 发布 GPT-6.2 Astra 和 Sol，Astra 的 API 输入价下调；Qwen4-Max 正式上线；Thinking Machines 发布 Inkling 2 Mini；Anthropic 发布 Fable 5.2 和 Mythos 5.2。',
+      money:   'Anthropic 完成 IPO 交割；豆包工作宣布日活破 800 万、企业 ARR 破 20 亿元；腾讯称 WorkBuddy 日活超 1000 万，按最近七天收入年化超过 5 亿美元。',
+      product: 'Genie 4 进入 Gemini API 和 AI Studio；Google 推出输出不收费的 Gemini Decisions API；千问办公 2.0 推出多人与 Agent 协作空间。',
+      feature: 'Claude 电脑操作向 Team 和 Enterprise 开放测试；Gemini Mac 版上线 computer use；ChatGPT Space 向 Plus 开放；Muse 在加拿大接上 Loblaw 并上线语音。',
+      trend:   'Sierra 发布个人 Agent 协议 Poppy 1.0，Shopify 全站启用。',
       event:   '英伟达 CEO 黄仁勋辞职，CFO 暂代。',
     },
   },
@@ -127,5 +135,5 @@ const REPORT = {
   },
 };
 
-return { NOW: '2026-11-22', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
+return { NOW: '2026-11-23', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
 })();

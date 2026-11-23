@@ -1,5 +1,5 @@
 /* ===== 竞品观测 · 收录数据 =====
-   口径：2026-07-01 起收录，截至 2026-11-21。全部是公开信息，每条附来源链接。
+   口径：2026-07-01 起收录，截至 2026-11-23。全部是公开信息，每条附来源链接。
    2026-11-17 补收 11-16 的 1 条（Google Docs 对比 Word 文件）。
    7 月 15 条沿用 2026-11-07 检索结果；8–11 月 45 条于 2026-11-15 检索并逐条读过原文（含补查的 Google 8、9 月上中旬 7 条）。
    「官方」= 厂商自己的更新日志或博客；「媒体」= 新闻报道或转载（官方原文没能读到时使用）。
@@ -16,7 +16,11 @@ const CLG = ['Claude 更新日志', 'https://claude.com/docs/cowork/changelog'];
 
 /* [日期, 竞品, 主题, 来源类型, 标题, 摘要, [来源名, 链接]]，按日期倒序 */
 const U = [
-  /* ---------- 11 月（截至 11-21） ---------- */
+  /* ---------- 11 月（截至 11-23） ---------- */
+  ['11-20','ms','scope','off','Copilot 在 Word、Excel、PowerPoint 里可用 GPT-6.2','GPT-6.2 Sol 向符合条件的用户在 Copilot Chat、Cowork、Copilot Studio，以及 Excel、PowerPoint、Word 中全球推开；Astra 先在 Cowork 和 Studio 推开，Frontier 用户还能在 Chat 和这三款应用里使用。管理员可在 Microsoft 365 管理中心配置开放范围。',['Microsoft Copilot 博客','https://techcommunity.microsoft.com/blog/microsoft-copilot-blog/available-today-openais-gpt-6-2-sol-and-gpt-6-2-astra-in-microsoft-copilot/4574229']],
+  ['11-20','google','ship','off','加密的 Google 文档可以多人同时编辑和评论','客户端加密的文档此前一次只能一个人改。Enterprise Plus 等符合条件的客户申请加入测试后，新建的加密文档默认可以多人实时一起写、改、评论，密钥仍只由客户掌握。',gw('2026/11/now-available-in-beta-collaborate-in-real-time-on-client-side-encrypted-Google-Docs.html')],
+  ['11-20','gpt','scope','off','ChatGPT Space 开始向 Plus 用户开放','18 岁及以上的 Plus 用户可以在 Space 里做出可交互的页面和演示，并邀请同样开通了 Space 的人一起改；页面和幻灯片还能按已连接的应用自动更新。免费用户打不开别人分享的页面或演示。',['ChatGPT 发布说明','https://help.openai.com/en/articles/6825453-chatgpt-release-notes']],
+  ['11-19','google','meet','off','Meet 演示时可以直接分享文档、表格和幻灯片链接','演示者可以把正在放的 Docs、Sheets、Slides 链接发到会中，并在画面上显示文件卡片；也可以不离开会议就改 Drive 权限。只发链接不会自动改权限。这项能力默认关闭。',gw('2026/11/seamlessly-share-presented-file-links-with-viewers-in-Google-Meet.html')],
   ['11-18','google','ship','off','Google Docs 新增图注、交叉引用和图注目录','可插入自动编号的图、表、公式标签，增删后自动重新排序；交叉引用的显示文字随图注更新；还能生成带页码的可点击图注目录；与 Word（.docx）导入导出兼容；面向所有 Workspace 和个人账号，默认开启。',gw('2026/11/add-inline-captions-cross-references-and-tables-of-captions-in-Google-Docs.html')],
   ['11-16','google','ship','off','Google Docs 可以直接对比两个 Word 文件，不用先转换','文档对比工具支持 .docx，比较 Word 文件时不必先转成 Google 文档，Drive 里不会多出重复文件；面向所有 Workspace 和个人账号，默认开启。',gw('2026/11/review-edits-across-microsoft-word-docx-and-Google-Docs-files.html')],
   ['11-12','claude','ship','off','Claude 任务里的文件可直接下载，Markdown 预览支持 Mermaid 图','在电脑上运行的任务产出的文件新增下载选项；回复和 Markdown 文件预览会渲染 Mermaid 图。',CLG],
@@ -94,10 +98,12 @@ const REPORT = {
   11: {
     partial: true,
     h1: '11 月至今，AI 做出的东西<mark>能直接拿走</mark>',
-    lead: '截至 11 月 17 日：Google Docs 能直接对比两个 Word 文件，不用先转换；Google 把 Gemini 技能推到 Docs、Slides、Drive 等应用，Sheets 画布可以发布成独立的只读链接；Claude 任务里的文件可以直接下载，Markdown 预览能渲染 Mermaid 图。完整月报在 11 月 30 日 18:00 生成。',
+    lead: '截至 11 月 23 日：加密的 Google 文档可以多人同时编辑；Meet 演示时可以直接把文档、表格和幻灯片的链接发给与会者；Copilot 在 Word、Excel、PowerPoint 里可用 GPT-6.2。此前 Google Docs 已能直接对比两个 Word 文件，并加上会自动重排的图注。完整月报在 11 月 30 日 18:00 生成。',
     sum: {
       agent: 'Google 的 Gemini 技能在 Docs、Gmail、Slides、Drive、Chat 中上线，Sheets 和 Meet 暂不支持。',
-      ship:  'Google Docs 可直接对比 .docx 文件；Sheets 画布可以单独发布为只读链接；Claude 任务里的文件可以下载，Markdown 预览支持 Mermaid 图。',
+      ship:  '加密的 Google 文档开放多人实时协作测试；Google Docs 可直接对比 .docx，并支持图注、交叉引用和图注目录；Sheets 画布可以单独发布为只读链接；Claude 任务里的文件可以下载。',
+      meet:  'Meet 演示时可以分享 Docs、Sheets、Slides 链接，并在会议里调整 Drive 权限。',
+      scope: 'Copilot 在 Word、Excel、PowerPoint 中接入 GPT-6.2；ChatGPT Space 开始向 Plus 用户开放。',
     },
   },
   10: {
@@ -149,7 +155,7 @@ const REPORT = {
   },
 };
 
-return { NOW: '2026-11-21', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
+return { NOW: '2026-11-23', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
 })();
 
 /* 注册为「CCM 云文档」空间的数据 */
