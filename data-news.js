@@ -1,5 +1,5 @@
 /* ===== 观测空间 · AI 热门资讯 · 收录数据 =====
-   口径：2026-07-01 起收录，截至 2026-11-23。全部是公开信息，每条附来源链接；2026-11-15 检索并读过原文或报道正文。
+   口径：2026-07-01 起收录，截至 2026-11-24。全部是公开信息，每条附来源链接；2026-11-15 检索并读过原文或报道正文。
    范围：模型发布、新产品、新功能、新趋势、资本动向、监管与行业事件，重点是前三类和趋势。
    「官方」= 公司自己的博客或新闻稿；「媒体」= 新闻报道、周报或第三方索引。
    周报类来源（Tech Startups、Digital Applied、AI Funding）只用于它们明确写出日期和主体的条目。
@@ -13,7 +13,11 @@ const FS8 = ['科技日报', 'https://www.stdaily.com/web/gdxw/2026-09/16/conten
 
 /* [日期, 主体, 主题, 来源类型, 标题, 摘要, [来源名, 链接]]，按日期倒序 */
 const U = [
-  /* ---------- 11 月（截至 11-23） ---------- */
+  /* ---------- 11 月（截至 11-24） ---------- */
+  ['11-23','other','model','off','Z.ai 发布 GLM-5.4：首个基于循环 Transformer 的旗舰模型','把 GLM-5 底座的 28 层循环跑两遍，参数规模 7500 亿；官方称智能水平相当于 2T–3T 参数的模型，高峰期约 70–80 token/秒；API 即将开放，权重计划在安全加固后开源。官方也提到模型容易陷入过长的「马拉松式思考」。',['Z.ai 官方博客','https://z.ai/blog/glm-5.4']],
+  ['11-23','openai','product','off','OpenAI 与思科推出开源运行时 Shirudo：不重启就能给在跑的 Linux 系统加防护','基于 eBPF，把临时「护盾」挂到运行中的服务上，在补丁上线前挡住漏洞利用；官方演示由 Codex 生成的护盾拦下了针对运行中 Elasticsearch 的 Java4Shell 攻击。护盾需签名并经运维批准，项目采用 BSD 2-Clause 协议开源。',['OpenAI 官方博客','https://openai.com/index/introducing-shirudo/']],
+  ['11-23','anthropic','product','off','Claude 平台上线 Enterprise Frontier Safeguards 测试版：零数据留存','符合条件的组织使用最强模型时，Anthropic 不留存提示和回复；加密副本（Sealed Safety Data）存进客户自己云账号的存储桶。在 Claude 平台、AWS 上的 Claude 平台和 Google Cloud 上的 Claude 模型（Anthropic 托管）开放测试。',['Claude 平台发布说明','https://platform.claude.com/docs/en/release-notes/overview']],
+  ['11-23','google','feature','off','Google 搜索的个性化 AI 模式可连接 Wallet，Drive 和 Gemini 应用随后跟进','用户自愿开启后，AI 模式可读取 Google Wallet 里的消费和银行卡信息来给出省钱、用卡建议，只读、不能转账；Drive 和 Gemini 应用的连接将在未来几周上线，与已有的 Gmail、日历、照片并列。',['Google 官方博客','https://blog.google/products-and-platforms/products/search/google-search-personal-intelligence-apps/']],
   ['11-20','other','model','off','Thinking Machines 发布 Inkling 2 Mini，约 20GB 可在笔记本上跑','循环混合专家模型，总参数 264 亿、每 token 激活 34 亿，中间层对每个 token 跑三遍；权重大约 20GB，开放权重，当天可在 Tinker 上推理和定制。官方称在 1000 亿参数以下的开放模型里，DeepSWE v1.1 为 48.2%。',['Thinking Machines Lab','https://thinkingmachines.ai/news/inkling-2-mini/']],
   ['11-20','anthropic','feature','off','Claude 电脑操作向 Team 和 Enterprise 开放测试','电脑操作让 Claude 看见用户允许的屏幕，并在这些桌面应用里干活；可在新的 Claude 桌面体验里使用，网页版和手机版需打开电脑访问。正在按组织陆续开放。',['Claude 帮助中心发布说明','https://support.claude.com/en/articles/12138966-release-notes']],
   ['11-20','openai','feature','off','ChatGPT Space 开始向 Plus 用户开放','18 岁及以上的 Plus 用户可以在 Space 里做出可交互的页面和演示，并邀请同样开通了 Space 的人一起改；页面和幻灯片可以按已连接的应用自动更新。免费用户打不开别人分享的页面或演示。',['ChatGPT 发布说明','https://help.openai.com/en/articles/6825453-chatgpt-release-notes']],
@@ -82,7 +86,7 @@ const REPORT = {
   11: {
     partial: true,
     h1: '11 月至今，新模型<mark>更快、更省</mark>',
-    lead: '截至 11 月 23 日：Anthropic 完成 IPO 交割，公告称含老股出售在内募资约 935 亿美元；Google 发布 Gemini 4 Neon，并把 Genie 4 开放到 Gemini API；Thinking Machines 发布约 20GB、可在笔记本上跑的 Inkling 2 Mini。国内这边，豆包工作宣布日活破 800 万、企业 ARR 破 20 亿元，腾讯称 WorkBuddy 日活超 1000 万。完整月报在 11 月 30 日 18:00 生成。',
+    lead: '截至 11 月 24 日：Anthropic 完成 IPO 交割，公告称含老股出售在内募资约 935 亿美元；Google 发布 Gemini 4 Neon，并把 Genie 4 开放到 Gemini API；Thinking Machines 发布约 20GB、可在笔记本上跑的 Inkling 2 Mini。国内这边，豆包工作宣布日活破 800 万、企业 ARR 破 20 亿元，腾讯称 WorkBuddy 日活超 1000 万。完整月报在 11 月 30 日 18:00 生成。',
     sum: {
       model:   'Google 发布 Gemini 4 Neon；OpenAI 发布 GPT-6.2 Astra 和 Sol，Astra 的 API 输入价下调；Qwen4-Max 正式上线；Thinking Machines 发布 Inkling 2 Mini；Anthropic 发布 Fable 5.2 和 Mythos 5.2。',
       money:   'Anthropic 完成 IPO 交割；豆包工作宣布日活破 800 万、企业 ARR 破 20 亿元；腾讯称 WorkBuddy 日活超 1000 万，按最近七天收入年化超过 5 亿美元。',
@@ -135,5 +139,5 @@ const REPORT = {
   },
 };
 
-return { NOW: '2026-11-23', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
+return { NOW: '2026-11-24', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
 })();
