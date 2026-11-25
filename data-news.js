@@ -1,5 +1,5 @@
 /* ===== 观测空间 · AI 热门资讯 · 收录数据 =====
-   口径：2026-07-01 起收录，截至 2026-11-24。全部是公开信息，每条附来源链接；2026-11-15 检索并读过原文或报道正文。
+   口径：2026-07-01 起收录，截至 2026-11-25。全部是公开信息，每条附来源链接；2026-11-15 检索并读过原文或报道正文。
    范围：模型发布、新产品、新功能、新趋势、资本动向、监管与行业事件，重点是前三类和趋势。
    「官方」= 公司自己的博客或新闻稿；「媒体」= 新闻报道、周报或第三方索引。
    周报类来源（Tech Startups、Digital Applied、AI Funding）只用于它们明确写出日期和主体的条目。
@@ -13,7 +13,10 @@ const FS8 = ['科技日报', 'https://www.stdaily.com/web/gdxw/2026-09/16/conten
 
 /* [日期, 主体, 主题, 来源类型, 标题, 摘要, [来源名, 链接]]，按日期倒序 */
 const U = [
-  /* ---------- 11 月（截至 11-24） ---------- */
+  /* ---------- 11 月（截至 11-25） ---------- */
+  ['11-24','byte','product','media','豆包推出个人 AI 助理「小豆」，邀请制公测','豆包官方账号 11 月 24 日宣布，小豆是能主动帮用户办事的个人 AI 助理，公测期间凭邀请码开通并赠送一定免费额度；其能力和体验之后会逐步上线豆包 App。',['腾讯新闻 · 安溪报转述豆包官方','https://news.qq.com/rain/a/20261124A0AW0500']],
+  ['11-24','tencent','model','media','腾讯混元发布并开源第三代翻译模型 Hy MT3','包含 1.8B、7B、30B-A3B（MoE）三个尺寸，面向 PC、手机等端侧场景；已在腾讯 Hy 翻译 App 和小程序上线，开源模型可自行下载部署。',['腾讯新闻 · 界面新闻','https://news.qq.com/rain/a/20261124A0AWGA00']],
+  ['11-23','google','feature','off','Gemini API 上线文件切片控制，并原生支持 Office 文件','开发者可只让模型读取 PDF 的指定页、表格的指定工作表和单元格范围、音视频的指定片段，只按实际读取的部分计费；同时可以直接上传 Word、Excel、PowerPoint 和 OpenDocument 文件。适用于全部 Gemini 4 模型，已在 AI Studio 和 Gemini 平台可用。',['Google 官方博客','https://blog.google/innovation-and-ai/technology/developers-tools/file-slicing-controls/']],
   ['11-23','other','model','off','Z.ai 发布 GLM-5.4：首个基于循环 Transformer 的旗舰模型','把 GLM-5 底座的 28 层循环跑两遍，参数规模 7500 亿；官方称智能水平相当于 2T–3T 参数的模型，高峰期约 70–80 token/秒；API 即将开放，权重计划在安全加固后开源。官方也提到模型容易陷入过长的「马拉松式思考」。',['Z.ai 官方博客','https://z.ai/blog/glm-5.4']],
   ['11-23','openai','product','off','OpenAI 与思科推出开源运行时 Shirudo：不重启就能给在跑的 Linux 系统加防护','基于 eBPF，把临时「护盾」挂到运行中的服务上，在补丁上线前挡住漏洞利用；官方演示由 Codex 生成的护盾拦下了针对运行中 Elasticsearch 的 Java4Shell 攻击。护盾需签名并经运维批准，项目采用 BSD 2-Clause 协议开源。',['OpenAI 官方博客','https://openai.com/index/introducing-shirudo/']],
   ['11-23','anthropic','product','off','Claude 平台上线 Enterprise Frontier Safeguards 测试版：零数据留存','符合条件的组织使用最强模型时，Anthropic 不留存提示和回复；加密副本（Sealed Safety Data）存进客户自己云账号的存储桶。在 Claude 平台、AWS 上的 Claude 平台和 Google Cloud 上的 Claude 模型（Anthropic 托管）开放测试。',['Claude 平台发布说明','https://platform.claude.com/docs/en/release-notes/overview']],
@@ -86,7 +89,7 @@ const REPORT = {
   11: {
     partial: true,
     h1: '11 月至今，新模型<mark>更快、更省</mark>',
-    lead: '截至 11 月 24 日：Anthropic 完成 IPO 交割，公告称含老股出售在内募资约 935 亿美元；Google 发布 Gemini 4 Neon，并把 Genie 4 开放到 Gemini API；Thinking Machines 发布约 20GB、可在笔记本上跑的 Inkling 2 Mini。国内这边，豆包工作宣布日活破 800 万、企业 ARR 破 20 亿元，腾讯称 WorkBuddy 日活超 1000 万。完整月报在 11 月 30 日 18:00 生成。',
+    lead: '截至 11 月 25 日：豆包推出个人 AI 助理「小豆」开启公测；Gemini API 上线文件切片控制；Anthropic 完成 IPO 交割，公告称含老股出售在内募资约 935 亿美元；Google 发布 Gemini 4 Neon，并把 Genie 4 开放到 Gemini API；Thinking Machines 发布约 20GB、可在笔记本上跑的 Inkling 2 Mini。国内这边，豆包工作宣布日活破 800 万、企业 ARR 破 20 亿元，腾讯称 WorkBuddy 日活超 1000 万。完整月报在 11 月 30 日 18:00 生成。',
     sum: {
       model:   'Google 发布 Gemini 4 Neon；OpenAI 发布 GPT-6.2 Astra 和 Sol，Astra 的 API 输入价下调；Qwen4-Max 正式上线；Thinking Machines 发布 Inkling 2 Mini；Anthropic 发布 Fable 5.2 和 Mythos 5.2。',
       money:   'Anthropic 完成 IPO 交割；豆包工作宣布日活破 800 万、企业 ARR 破 20 亿元；腾讯称 WorkBuddy 日活超 1000 万，按最近七天收入年化超过 5 亿美元。',
@@ -139,5 +142,5 @@ const REPORT = {
   },
 };
 
-return { NOW: '2026-11-24', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
+return { NOW: '2026-11-25', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
 })();

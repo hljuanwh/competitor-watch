@@ -1,5 +1,5 @@
 /* ===== 观测空间 · B 端 AI 办公 · 收录数据 =====
-   口径：2026-07-01 起收录，截至 2026-11-24。全部是公开信息，每条附来源链接；2026-11-15 检索并读过原文或报道正文。
+   口径：2026-07-01 起收录，截至 2026-11-25。全部是公开信息，每条附来源链接；2026-11-15 检索并读过原文或报道正文。
    「官方」= 厂商自己的博客、新闻稿或更新日志；「媒体」= 新闻报道、转载，或发布说明的第三方索引（官方页面无法直接读取时使用）。
    和「CCM 云文档」空间重叠的条目（Notion、Google、微软等）沿用那边已核实的文字和来源。
    没检索到可核实发布的月份如实留空：钉钉 9 月以外、Slack 9 月以外、企业微信 8 月（报道页无法打开，未收）。 */
@@ -19,7 +19,8 @@ const WWB = ['科技日报', 'https://www.stdaily.com/web/gdxw/2026-10/14/conten
 
 /* [日期, 产品, 主题, 来源类型, 标题, 摘要, [来源名, 链接]]，按日期倒序 */
 const U = [
-  /* ---------- 11 月（截至 11-24） ---------- */
+  /* ---------- 11 月（截至 11-25） ---------- */
+  ['11-24','google','connect','off','Workspace MCP 服务器和命令行工具正式可用，AI Agent 访问须走 MCP','Google 托管的 MCP 服务器让 Agent 直接调用 Gmail、云端硬盘、Docs、Sheets、Slides、日历、Chat 和 Tasks；命令行工具面向本地终端。管理员可在管理控制台设置敏感操作的人工确认并查看 Agent 审计日志，DLP 规则自动生效。API 分标准档（免费）和规模档，规模档 2027 年 4 月 1 日起计费；Agent 须改用 MCP，2027 年 2 月 1 日起强制执行。',['Google Workspace Updates','https://workspaceupdates.googleblog.com/2026/11/mcp-servers-cli-standardized-usage-tiers-now-available.html']],
   ['11-23','claude','govern','off','Claude 平台上线零数据留存测试版，加密副本存进客户自己的云','Enterprise Frontier Safeguards 面向使用最强模型的符合条件组织：Anthropic 不留存提示和回复，加密副本存进客户云账号的存储桶；新增 webhook 事件，在存储桶检查失败或恢复时通知。',['Claude 平台发布说明','https://platform.claude.com/docs/en/release-notes/overview']],
   ['11-23','google','entry','off','Google Chat 里应用和 Agent 发的消息可以带表格和标题','应用和 Agent 通过 Chat API 用 Markdown 发送表格和三级标题，对话里所有人都能看到；网页版可在消息内滚动，手机端点「显示表格」查看；不能在输入框里手写。管理员没有开关。',['Google Workspace Updates','https://workspaceupdates.googleblog.com/2026/11/make-messages-in-google-chat-from-apps-and-agents-easier-to-read-with-tables-and-headings.html']],
   ['11-20','m365','price','off','Copilot 可用 GPT-6.2 Sol 和 Astra','Sol 向符合条件的用户在 Copilot Chat、Cowork、Copilot Studio，以及 Excel、PowerPoint、Word 中全球推开；Astra 先在 Cowork 和 Studio 推开，Frontier 用户还能在 Chat 和这三款应用里使用。Work IQ 只按本人已有权限取用文件、会议和聊天。管理员在 Microsoft 365 管理中心配置。',['Microsoft Copilot 博客','https://techcommunity.microsoft.com/blog/microsoft-copilot-blog/available-today-openais-gpt-6-2-sol-and-gpt-6-2-astra-in-microsoft-copilot/4574229']],
@@ -100,7 +101,7 @@ const REPORT = {
   11: {
     partial: true,
     h1: '11 月至今，管理员开始<mark>管预算、管敏感文件</mark>',
-    lead: '截至 11 月 24 日：Copilot 接入 GPT-6.2 Sol 和 Astra，并接到 Word、Excel、PowerPoint；Claude 的电脑操作向 Team 和 Enterprise 开放测试；Slack 工作流可以把步骤交给 Slackbot 或其他 Agent，通过后才写入外部工具。管理员可以限制 Workspace Studio 流程能不能发消息、改共享文件。完整月报在 11 月 30 日 18:00 生成。',
+    lead: '截至 11 月 25 日：Google Workspace MCP 服务器和命令行工具正式可用，管理员可管控 Agent 访问；Copilot 接入 GPT-6.2 Sol 和 Astra，并接到 Word、Excel、PowerPoint；Claude 的电脑操作向 Team 和 Enterprise 开放测试；Slack 工作流可以把步骤交给 Slackbot 或其他 Agent，通过后才写入外部工具。管理员可以限制 Workspace Studio 流程能不能发消息、改共享文件。完整月报在 11 月 30 日 18:00 生成。',
     sum: {
       govern: 'Workspace Studio 可以限制流程只能做创建者自己看得见的动作；Claude 企业部署可按 Purview 标签拦截 OneDrive、SharePoint、Outlook 内容。',
       price:  'Copilot 可选 GPT-6.2 Sol 和 Astra；ChatGPT Space 开始向 Plus 开放；豆包工作接入第三方模型并标出额度倍率；Claude 网关管理员可以设支出上限和共享预算。',
@@ -154,5 +155,5 @@ const REPORT = {
   },
 };
 
-return { NOW: '2026-11-24', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
+return { NOW: '2026-11-25', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
 })();
