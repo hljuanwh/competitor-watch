@@ -1,5 +1,5 @@
 /* ===== 观测空间 · AI 热门资讯 · 收录数据 =====
-   口径：2026-07-01 起收录，截至 2026-11-25。全部是公开信息，每条附来源链接；2026-11-15 检索并读过原文或报道正文。
+   口径：2026-07-01 起收录，截至 2026-11-26。全部是公开信息，每条附来源链接；2026-11-15 检索并读过原文或报道正文。
    范围：模型发布、新产品、新功能、新趋势、资本动向、监管与行业事件，重点是前三类和趋势。
    「官方」= 公司自己的博客或新闻稿；「媒体」= 新闻报道、周报或第三方索引。
    周报类来源（Tech Startups、Digital Applied、AI Funding）只用于它们明确写出日期和主体的条目。
@@ -13,7 +13,9 @@ const FS8 = ['科技日报', 'https://www.stdaily.com/web/gdxw/2026-09/16/conten
 
 /* [日期, 主体, 主题, 来源类型, 标题, 摘要, [来源名, 链接]]，按日期倒序 */
 const U = [
-  /* ---------- 11 月（截至 11-25） ---------- */
+  /* ---------- 11 月（截至 11-26） ---------- */
+  ['11-24','anthropic','feature','off','Claude 可以把产物安装成 Mac 和 Windows 应用','在 Claude 桌面版里把产物装成独立应用，有自己的窗口和图标，改产物后应用会自动更新；可使用 Claude 和已连接的应用，调用计入套餐额度。测试版向各档用户开放；Team 默认开启但完全访问默认关闭，Enterprise 需所有者打开。Claude Docs、Slides 和 Sheets 不能这样安装。',['Claude 官方文章','https://claude.com/resources/articles/install-as-app']],
+  ['11-24','anthropic','feature','off','MCP 服务器可以向 Claude 下发技能，长任务和中途询问正式可用','Skills over MCP 进入公开测试：服务器可以把技能和工具一起提供，Claude 用到时再加载；Shopify、HubSpot、Atlassian 等已接入。默认对 Pro、Max、Ultra 开启，Team 需管理员打开，Enterprise 即将支持。Tasks 和 Elicitation 在 Claude 和 Claude Code 正式可用。',['Claude 官方文章','https://claude.com/resources/articles/skills-over-mcp-tasks-and-more']],
   ['11-24','byte','product','media','豆包推出个人 AI 助理「小豆」，邀请制公测','豆包官方账号 11 月 24 日宣布，小豆是能主动帮用户办事的个人 AI 助理，公测期间凭邀请码开通并赠送一定免费额度；其能力和体验之后会逐步上线豆包 App。',['腾讯新闻 · 安溪报转述豆包官方','https://news.qq.com/rain/a/20261124A0AW0500']],
   ['11-24','tencent','model','media','腾讯混元发布并开源第三代翻译模型 Hy MT3','包含 1.8B、7B、30B-A3B（MoE）三个尺寸，面向 PC、手机等端侧场景；已在腾讯 Hy 翻译 App 和小程序上线，开源模型可自行下载部署。',['腾讯新闻 · 界面新闻','https://news.qq.com/rain/a/20261124A0AWGA00']],
   ['11-23','google','feature','off','Gemini API 上线文件切片控制，并原生支持 Office 文件','开发者可只让模型读取 PDF 的指定页、表格的指定工作表和单元格范围、音视频的指定片段，只按实际读取的部分计费；同时可以直接上传 Word、Excel、PowerPoint 和 OpenDocument 文件。适用于全部 Gemini 4 模型，已在 AI Studio 和 Gemini 平台可用。',['Google 官方博客','https://blog.google/innovation-and-ai/technology/developers-tools/file-slicing-controls/']],
@@ -89,12 +91,12 @@ const REPORT = {
   11: {
     partial: true,
     h1: '11 月至今，新模型<mark>更快、更省</mark>',
-    lead: '截至 11 月 25 日：豆包推出个人 AI 助理「小豆」开启公测；Gemini API 上线文件切片控制；Anthropic 完成 IPO 交割，公告称含老股出售在内募资约 935 亿美元；Google 发布 Gemini 4 Neon，并把 Genie 4 开放到 Gemini API；Thinking Machines 发布约 20GB、可在笔记本上跑的 Inkling 2 Mini。国内这边，豆包工作宣布日活破 800 万、企业 ARR 破 20 亿元，腾讯称 WorkBuddy 日活超 1000 万。完整月报在 11 月 30 日 18:00 生成。',
+    lead: '截至 11 月 26 日：Claude 可以把产物安装成 Mac 和 Windows 应用，MCP 服务器也可以向 Claude 下发技能；豆包推出个人 AI 助理「小豆」开启公测；Gemini API 上线文件切片控制；Anthropic 完成 IPO 交割，公告称含老股出售在内募资约 935 亿美元；Google 发布 Gemini 4 Neon。完整月报在 11 月 30 日 18:00 生成。',
     sum: {
       model:   'Google 发布 Gemini 4 Neon；OpenAI 发布 GPT-6.2 Astra 和 Sol，Astra 的 API 输入价下调；Qwen4-Max 正式上线；Thinking Machines 发布 Inkling 2 Mini；Anthropic 发布 Fable 5.2 和 Mythos 5.2。',
       money:   'Anthropic 完成 IPO 交割；豆包工作宣布日活破 800 万、企业 ARR 破 20 亿元；腾讯称 WorkBuddy 日活超 1000 万，按最近七天收入年化超过 5 亿美元。',
       product: 'Genie 4 进入 Gemini API 和 AI Studio；Google 推出输出不收费的 Gemini Decisions API；千问办公 2.0 推出多人与 Agent 协作空间。',
-      feature: 'Claude 电脑操作向 Team 和 Enterprise 开放测试；Gemini Mac 版上线 computer use；ChatGPT Space 向 Plus 开放；Muse 在加拿大接上 Loblaw 并上线语音。',
+      feature: 'Claude 可以把产物安装成桌面应用，MCP 服务器可向 Claude 下发技能；Claude 电脑操作向 Team 和 Enterprise 开放测试；ChatGPT Space 向 Plus 开放。',
       trend:   'Sierra 发布个人 Agent 协议 Poppy 1.0，Shopify 全站启用。',
       event:   '英伟达 CEO 黄仁勋辞职，CFO 暂代。',
     },
@@ -142,5 +144,5 @@ const REPORT = {
   },
 };
 
-return { NOW: '2026-11-25', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
+return { NOW: '2026-11-26', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
 })();
