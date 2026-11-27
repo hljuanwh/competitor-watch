@@ -1,5 +1,5 @@
 /* ===== 观测空间 · AI 热门资讯 · 收录数据 =====
-   口径：2026-07-01 起收录，截至 2026-11-26。全部是公开信息，每条附来源链接；2026-11-15 检索并读过原文或报道正文。
+   口径：2026-07-01 起收录，截至 2026-11-27。全部是公开信息，每条附来源链接；2026-11-15 检索并读过原文或报道正文。
    范围：模型发布、新产品、新功能、新趋势、资本动向、监管与行业事件，重点是前三类和趋势。
    「官方」= 公司自己的博客或新闻稿；「媒体」= 新闻报道、周报或第三方索引。
    周报类来源（Tech Startups、Digital Applied、AI Funding）只用于它们明确写出日期和主体的条目。
@@ -13,7 +13,12 @@ const FS8 = ['科技日报', 'https://www.stdaily.com/web/gdxw/2026-09/16/conten
 
 /* [日期, 主体, 主题, 来源类型, 标题, 摘要, [来源名, 链接]]，按日期倒序 */
 const U = [
-  /* ---------- 11 月（截至 11-26） ---------- */
+  /* ---------- 11 月（截至 11-27） ---------- */
+  ['11-26','openai','feature','media','OpenAI 修正 GPT-6.2 计费错误，Astra 和 Sol 会更快用完额度','OpenAI 称 GPT-6.2 上线时计费有误，Astra 和 Sol 的用量被少计。纠正后，同样的工作会比上周更快用完套餐额度：Astra 约快 40%，Sol 约快 25%。不会追溯补收已发生的用量，订阅价格和其他模型不受影响；Go、Plus、Pro 和 Business 用户获赠一次预存重置，从 11 月 26 日起可用。',['Decrypt','https://decrypt.co/384053/openai-fixes-chatgpt-billing-error-promises-to-make-it-40-worse']],
+  ['11-26','tencent','model','media','腾讯混元开源草稿模型 DFly2，Hy4 flash 长文本生成最高提速 4.2 倍','混元宣布开源新一代草稿模型 DFly2，面向长文本和智能体任务，用投机采样在不改 Hy4 flash 权重和输出结果的前提下加快生成；长文本场景加速约 3.2 倍，AgentLongBench 上最高 4.2 倍。它可共享目标模型的 KV 缓存和稀疏索引。权重已随 Hy4 及 Hy4 flash 开源，训练代码集成在 AngelSpec 框架中。',['凤凰网','https://news.qq.com/rain/a/20261126A0AP2700']],
+  ['11-26','kimi','product','off','Kimi 发布游戏开发与创意工作解决方案','基于 K3.1 系列模型、Kimi Code 和 Kimi Work，以及 Unity、Unreal Engine、Blender 等插件，帮助游戏团队做可玩原型、改现有工程和美术资产，并把玩家反馈带回迭代。立项前可用 Godot 在一两天内做出试玩 Demo；正式开发时可在 Unity、虚幻引擎里改工程并留下差异和验证记录。',['Kimi 官方','https://www.kimi.com/news/kimi-game-solutions']],
+  ['11-26','other','event','media','美国联邦通信委员会批准 SpaceX 建设最多 100 万颗轨道数据中心卫星','FCC 在感恩节前一天发布命令，授权 SpaceX 建设并运营名为 Starmind 的轨道计算星座，规模最多 100 万颗卫星。命令要求 2033 年 11 月 25 日前发射首批、2038 年部署一半、2040 年完成全部部署。SpaceX 与英伟达合作制造；马斯克称预计 2027 年第三季度首次发射。',['Spaceflight Now','https://spaceflightnow.com/2026/11/26/fcc-green-lights-spacexs-plan-to-launch-1-million-starmind-data-center-satellites/']],
+  ['11-25','anthropic','trend','off','Anthropic 把 Messages API 从 Python 迁到 Rust，未中断服务','官方称这是客户和 Claude Code、Cowork 访问 Claude 的主接口。Claude 约一周写出核心请求路径初版，团队用生产流量对照新旧实现，并派 Agent 修复差异。迁成 Rust 后，单次请求 CPU 约降 70%，首个 token 的中位等待时间约短 20%，过程中服务没有停机。',['Anthropic 官方','https://www.anthropic.com/research/migrating-api-to-rust']],
   ['11-24','anthropic','feature','off','Claude 可以把产物安装成 Mac 和 Windows 应用','在 Claude 桌面版里把产物装成独立应用，有自己的窗口和图标，改产物后应用会自动更新；可使用 Claude 和已连接的应用，调用计入套餐额度。测试版向各档用户开放；Team 默认开启但完全访问默认关闭，Enterprise 需所有者打开。Claude Docs、Slides 和 Sheets 不能这样安装。',['Claude 官方文章','https://claude.com/resources/articles/install-as-app']],
   ['11-24','anthropic','feature','off','MCP 服务器可以向 Claude 下发技能，长任务和中途询问正式可用','Skills over MCP 进入公开测试：服务器可以把技能和工具一起提供，Claude 用到时再加载；Shopify、HubSpot、Atlassian 等已接入。默认对 Pro、Max、Ultra 开启，Team 需管理员打开，Enterprise 即将支持。Tasks 和 Elicitation 在 Claude 和 Claude Code 正式可用。',['Claude 官方文章','https://claude.com/resources/articles/skills-over-mcp-tasks-and-more']],
   ['11-24','byte','product','media','豆包推出个人 AI 助理「小豆」，邀请制公测','豆包官方账号 11 月 24 日宣布，小豆是能主动帮用户办事的个人 AI 助理，公测期间凭邀请码开通并赠送一定免费额度；其能力和体验之后会逐步上线豆包 App。',['腾讯新闻 · 安溪报转述豆包官方','https://news.qq.com/rain/a/20261124A0AW0500']],
@@ -91,7 +96,7 @@ const REPORT = {
   11: {
     partial: true,
     h1: '11 月至今，新模型<mark>更快、更省</mark>',
-    lead: '截至 11 月 26 日：Claude 可以把产物安装成 Mac 和 Windows 应用，MCP 服务器也可以向 Claude 下发技能；豆包推出个人 AI 助理「小豆」开启公测；Gemini API 上线文件切片控制；Anthropic 完成 IPO 交割，公告称含老股出售在内募资约 935 亿美元；Google 发布 Gemini 4 Neon。完整月报在 11 月 30 日 18:00 生成。',
+    lead: '截至 11 月 27 日：OpenAI 修正 GPT-6.2 计费错误；腾讯混元开源草稿模型 DFly2；Kimi 发布游戏开发解决方案；美国 FCC 批准 SpaceX 轨道数据中心卫星；Anthropic 把 Messages API 迁到 Rust。完整月报在 11 月 30 日 18:00 生成。',
     sum: {
       model:   'Google 发布 Gemini 4 Neon；OpenAI 发布 GPT-6.2 Astra 和 Sol，Astra 的 API 输入价下调；Qwen4-Max 正式上线；Thinking Machines 发布 Inkling 2 Mini；Anthropic 发布 Fable 5.2 和 Mythos 5.2。',
       money:   'Anthropic 完成 IPO 交割；豆包工作宣布日活破 800 万、企业 ARR 破 20 亿元；腾讯称 WorkBuddy 日活超 1000 万，按最近七天收入年化超过 5 亿美元。',
@@ -144,5 +149,5 @@ const REPORT = {
   },
 };
 
-return { NOW: '2026-11-26', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
+return { NOW: '2026-11-27', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
 })();
