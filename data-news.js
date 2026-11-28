@@ -1,5 +1,5 @@
 /* ===== 观测空间 · AI 热门资讯 · 收录数据 =====
-   口径：2026-07-01 起收录，截至 2026-11-27。全部是公开信息，每条附来源链接；2026-11-15 检索并读过原文或报道正文。
+   口径：2026-07-01 起收录，截至 2026-11-28。全部是公开信息，每条附来源链接；2026-11-15 检索并读过原文或报道正文；2026-11-28 补收 11-27 的 6 条。
    范围：模型发布、新产品、新功能、新趋势、资本动向、监管与行业事件，重点是前三类和趋势。
    「官方」= 公司自己的博客或新闻稿；「媒体」= 新闻报道、周报或第三方索引。
    周报类来源（Tech Startups、Digital Applied、AI Funding）只用于它们明确写出日期和主体的条目。
@@ -13,7 +13,13 @@ const FS8 = ['科技日报', 'https://www.stdaily.com/web/gdxw/2026-09/16/conten
 
 /* [日期, 主体, 主题, 来源类型, 标题, 摘要, [来源名, 链接]]，按日期倒序 */
 const U = [
-  /* ---------- 11 月（截至 11-27） ---------- */
+  /* ---------- 11 月（截至 11-28） ---------- */
+  ['11-27','openai','event','media','OpenAI 反诉苹果窃取商业秘密并施压供应商','OpenAI 和 io Products 于 11 月 27 日在加州北区联邦法院对苹果提出反诉，指控苹果窃取硬件商业秘密、施压共用供应商限制与 OpenAI 合作，并利用个人设备和云盘监控离职员工。苹果回应称，反诉是在转移对其原诉讼的注意，原案指控 OpenAI 员工窃取苹果未发布技术的保密信息。',['9to5Mac','https://9to5mac.com/2026/11/27/openai-countersues-apple-alleging-trade-secret-theft-and-supplier-threats/']],
+  ['11-27','tencent','model','off','腾讯混元发布 3D 大模型 Hy3D 3.6','腾讯混元发布新一代 3D 大模型 Hy3D 3.6，重点提升高模几何质量与 PBR 材质贴图，并已上线腾讯云 TokenHub 提供 API；腾讯 AI 创意智能体 Miora、游戏资产生成平台 LAP、AIGC 漫剧平台 WorkRally 等已接入。',['腾讯云官方','https://news.qq.com/rain/a/20261127A075JG00']],
+  ['11-27','byte','feature','media','豆包工作接入剪映，可用一句话剪视频','豆包工作独家接入剪映官方插件，支持用一句话描述需求完成剪辑和多轨编辑，也可再通过对话修改或打开多轨草稿细调；还可调用剪映 Hub，把文稿、代码、脚本或商品图生成科普动画、知识短视频、短漫剧或营销短片。',['第一财经','https://www.yicai.com/news/103456679.html']],
+  ['11-27','kimi','product','off','Kimi 科研支持计划开放申请','月之暗面推出 Kimi for Science：首期面向自然科学、工程学及相关交叉学科的科研人员开放申请，入选者最高可获 15 万元 Kimi API 额度（约合 70 亿 tokens），并提供技术支持、新模型优先体验和长期合作机会；首期申请截止 12 月 8 日。',['Kimi 官方','https://www.kimi.com/news/kimi-for-science-program']],
+  ['11-27','deepseek','feature','media','DeepSeek 灰度测试「显示本轮消耗额度」','DeepSeek 网页端和 App 正在灰度测试该功能：一轮对话结束后会弹出详情，列出本次输入（缓存未命中）和输出的 Token 消耗及按 API 价格估算的金额，并提示当前上下文占用比例；报道称个人用户目前仍显示为免费。',['新浪科技','https://finance.sina.com.cn/tech/shenji/2026-11-27/doc-inkacqym1148912.shtml']],
+  ['11-27','deepseek','feature','media','DeepSeek 正式公开 API 工具延迟加载机制','DeepSeek 更新官方 API 文档，公开 Deferred Tool Loading：客户端可按需检索工具并把新工具定义追加到对话末尾，以减少上下文占用且不破坏已有缓存前缀；目前仅 deepseek-flash 的 Anthropic Messages 和 OpenAI Responses 接口支持。',['动察 Beating','https://www.beating.news/flash/379661']],
   ['11-26','openai','feature','media','OpenAI 修正 GPT-6.2 计费错误，Astra 和 Sol 会更快用完额度','OpenAI 称 GPT-6.2 上线时计费有误，Astra 和 Sol 的用量被少计。纠正后，同样的工作会比上周更快用完套餐额度：Astra 约快 40%，Sol 约快 25%。不会追溯补收已发生的用量，订阅价格和其他模型不受影响；Go、Plus、Pro 和 Business 用户获赠一次预存重置，从 11 月 26 日起可用。',['Decrypt','https://decrypt.co/384053/openai-fixes-chatgpt-billing-error-promises-to-make-it-40-worse']],
   ['11-26','tencent','model','media','腾讯混元开源草稿模型 DFly2，Hy4 flash 长文本生成最高提速 4.2 倍','混元宣布开源新一代草稿模型 DFly2，面向长文本和智能体任务，用投机采样在不改 Hy4 flash 权重和输出结果的前提下加快生成；长文本场景加速约 3.2 倍，AgentLongBench 上最高 4.2 倍。它可共享目标模型的 KV 缓存和稀疏索引。权重已随 Hy4 及 Hy4 flash 开源，训练代码集成在 AngelSpec 框架中。',['凤凰网','https://news.qq.com/rain/a/20261126A0AP2700']],
   ['11-26','kimi','product','off','Kimi 发布游戏开发与创意工作解决方案','基于 K3.1 系列模型、Kimi Code 和 Kimi Work，以及 Unity、Unreal Engine、Blender 等插件，帮助游戏团队做可玩原型、改现有工程和美术资产，并把玩家反馈带回迭代。立项前可用 Godot 在一两天内做出试玩 Demo；正式开发时可在 Unity、虚幻引擎里改工程并留下差异和验证记录。',['Kimi 官方','https://www.kimi.com/news/kimi-game-solutions']],
@@ -96,7 +102,7 @@ const REPORT = {
   11: {
     partial: true,
     h1: '11 月至今，新模型<mark>更快、更省</mark>',
-    lead: '截至 11 月 27 日：OpenAI 修正 GPT-6.2 计费错误；腾讯混元开源草稿模型 DFly2；Kimi 发布游戏开发解决方案；美国 FCC 批准 SpaceX 轨道数据中心卫星；Anthropic 把 Messages API 迁到 Rust。完整月报在 11 月 30 日 18:00 生成。',
+    lead: '截至 11 月 28 日：OpenAI 反诉苹果窃取商业秘密；腾讯混元发布 Hy3D 3.6；豆包工作接入剪映可一句话剪视频；Kimi 科研支持计划开放申请；DeepSeek 灰度测试对话额度显示，并公开 API 工具延迟加载。完整月报在 11 月 30 日 18:00 生成。',
     sum: {
       model:   'Google 发布 Gemini 4 Neon；OpenAI 发布 GPT-6.2 Astra 和 Sol，Astra 的 API 输入价下调；Qwen4-Max 正式上线；Thinking Machines 发布 Inkling 2 Mini；Anthropic 发布 Fable 5.2 和 Mythos 5.2。',
       money:   'Anthropic 完成 IPO 交割；豆包工作宣布日活破 800 万、企业 ARR 破 20 亿元；腾讯称 WorkBuddy 日活超 1000 万，按最近七天收入年化超过 5 亿美元。',
@@ -149,5 +155,5 @@ const REPORT = {
   },
 };
 
-return { NOW: '2026-11-27', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
+return { NOW: '2026-11-28', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
 })();

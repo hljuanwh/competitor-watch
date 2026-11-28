@@ -1,5 +1,5 @@
 /* ===== 观测空间 · B 端 AI 办公 · 收录数据 =====
-   口径：2026-07-01 起收录，截至 2026-11-27。全部是公开信息，每条附来源链接；2026-11-15 检索并读过原文或报道正文。
+   口径：2026-07-01 起收录，截至 2026-11-28。全部是公开信息，每条附来源链接；2026-11-15 检索并读过原文或报道正文。
    「官方」= 厂商自己的博客、新闻稿或更新日志；「媒体」= 新闻报道、转载，或发布说明的第三方索引（官方页面无法直接读取时使用）。
    和「CCM 云文档」空间重叠的条目（Notion、Google、微软等）沿用那边已核实的文字和来源。
    没检索到可核实发布的月份如实留空：钉钉 9 月以外、Slack 9 月以外、企业微信 8 月（报道页无法打开，未收）。 */
@@ -19,7 +19,7 @@ const WWB = ['科技日报', 'https://www.stdaily.com/web/gdxw/2026-10/14/conten
 
 /* [日期, 产品, 主题, 来源类型, 标题, 摘要, [来源名, 链接]]，按日期倒序 */
 const U = [
-  /* ---------- 11 月（截至 11-27） ---------- */
+  /* ---------- 11 月（截至 11-28） ---------- */
   ['11-26','chatgpt','price','media','OpenAI 修正 GPT-6.2 计费错误，Astra 和 Sol 会更快用完额度','OpenAI 称 GPT-6.2 上线时计费有误，Astra 和 Sol 的用量被少计。纠正后，同样的工作会比上周更快用完套餐额度：Astra 约快 40%，Sol 约快 25%。不会追溯补收已发生的用量，订阅价格和其他模型不受影响；Go、Plus、Pro 和 Business 用户获赠一次预存重置，从 11 月 26 日起可用。',['Decrypt','https://decrypt.co/384053/openai-fixes-chatgpt-billing-error-promises-to-make-it-40-worse']],
   ['11-24','claude','connect','off','MCP 服务器可以向 Claude 下发技能，长任务和中途询问正式可用','Skills over MCP 进入公开测试：服务器可以把技能和工具一起提供，Claude 用到时再加载；Shopify、HubSpot、Atlassian 等已接入。默认对 Pro、Max、Ultra 开启，Team 需管理员打开，Enterprise 即将支持。Tasks（后台长任务）和 Elicitation（执行中向用户确认）在 Claude 和 Claude Code 正式可用，正向 Team 和 Enterprise 推开。',['Claude 官方文章','https://claude.com/resources/articles/skills-over-mcp-tasks-and-more']],
   ['11-24','claude','connect','off','Claude 可以往已连接的应用发送文件，也可以从应用保存文件','测试版：Claude 能把文件发给连接目录里已支持的应用，或把应用提供的文件保存下来；自己添加的自定义连接器和 MCP 服务器不适用。正向 Pro、Max、Ultra 陆续开放，Team 和 Enterprise 需所有者打开，Free 随后跟进；可用于网页版、桌面版、手机和 Claude Code。首次向某个应用发文件前会询问。',['Claude 帮助中心','https://support.claude.com/en/articles/18534325-send-files-to-connected-apps-and-save-files-from-them']],
@@ -104,7 +104,7 @@ const REPORT = {
   11: {
     partial: true,
     h1: '11 月至今，管理员开始<mark>管预算、管敏感文件</mark>',
-    lead: '截至 11 月 27 日：OpenAI 修正 GPT-6.2 计费错误，Astra 和 Sol 会更快用完额度；Claude 的 MCP 服务器可以向 Claude 下发技能，也可以与已连接的应用互传文件；Google Workspace MCP 服务器和命令行工具正式可用；Copilot 接入 GPT-6.2；Claude 的电脑操作向 Team 和 Enterprise 开放测试。完整月报在 11 月 30 日 18:00 生成。',
+    lead: '截至 11 月 28 日：OpenAI 修正 GPT-6.2 计费错误，Astra 和 Sol 会更快用完额度；Claude 的 MCP 服务器可以向 Claude 下发技能，也可以与已连接的应用互传文件；Google Workspace MCP 服务器和命令行工具正式可用；Copilot 接入 GPT-6.2；Claude 的电脑操作向 Team 和 Enterprise 开放测试。完整月报在 11 月 30 日 18:00 生成。',
     sum: {
       govern: 'Workspace Studio 可以限制流程只能做创建者自己看得见的动作；Claude 企业部署可按 Purview 标签拦截 OneDrive、SharePoint、Outlook 内容。',
       price:  'Copilot 可选 GPT-6.2 Sol 和 Astra；ChatGPT Space 开始向 Plus 开放；豆包工作接入第三方模型并标出额度倍率；Claude 网关管理员可以设支出上限和共享预算。',
@@ -158,5 +158,5 @@ const REPORT = {
   },
 };
 
-return { NOW: '2026-11-27', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
+return { NOW: '2026-11-28', START: '2026-07-01', MONTHS: [11, 10, 9, 8, 7], LATEST_FULL: 10, U, REPORT };
 })();
